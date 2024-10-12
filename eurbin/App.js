@@ -18,6 +18,7 @@ import EditProfilePage from './pages/EditProfilePage';
 import LandingPage from './pages/LandingPage';
 import SignUp from './pages/SignUpPage';
 import AchievementPage from './pages/AchievementPage';
+import AnalyticsPage from './pages/AnalyticsPage';
 
 
 
@@ -79,6 +80,7 @@ export default function App() {
         <Stack.Screen name="Landing" component={LandingPage} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="Achievement" component={AchievementPage} />
+        <Stack.Screen name="Analytics" component={AnalyticsPage} />
       
       </Stack.Navigator>
  
