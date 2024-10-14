@@ -129,7 +129,7 @@ const HomePage = ({ navigation }) => {
 
       <View style={styles.customBox}>
         
-        <Text style={styles.boxTextsmall}>Smart Points </Text>
+        <Text style={styles.boxTextsmall}>Smart Points</Text>
         <Text style={styles.boxText}>{currentUser.smartPoints}</Text>
         <TouchableOpacity style={styles.redeemButton} onPress={() => setModalVisible(true)}>
           <Image source={Redeem} style={styles.redeemIcon} />

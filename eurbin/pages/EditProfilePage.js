@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity,Alert } from 'react-native';
-import User from '../icons/user22.png'; 
-import Camera from '../icons/camera.png'; 
-
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import { useUser } from './UserContext/User';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -11,10 +9,27 @@ export default function EditProfilePage() {
     const [username, setUsername] = useState(currentUser.userName);
     const [email, setEmail] = useState(currentUser.email);
     const [errorMessage, setErrorMessage] = useState('');
-    
+    const [image, setImage] = useState(null);
 
     const updateProfileUrl = `https://eurbin.vercel.app/user/${currentUser.userId}`;
 
+    const pickImage = async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+            Alert.alert('Permission Denied', 'We need access to your gallery to update the profile picture.');
+            return;
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+        }
+    };
 
     const handleUpdate = async () => {
         const token = await AsyncStorage.getItem('token');
@@ -22,62 +37,62 @@ export default function EditProfilePage() {
             setErrorMessage('Username and email cannot be empty');
             return;
         }
-    
+
         try {
+            const formData = new FormData();
+            formData.append('userId', currentUser.userId);
+            formData.append('userName', username);
+            formData.append('email', email);
+            formData.append('smartPoints', currentUser.smartPoints);
+            formData.append('plasticBottle', currentUser.plasticBottle);
+            formData.append('rank', currentUser.rank);
+            formData.append('co2', currentUser.co2);
+            formData.append('accumulatedSP', currentUser.accumulatedSP);
+
+            if (image) {
+                const filename = image.split('/').pop();
+                const type = `image/${filename.split('.').pop()}`;
+                formData.append('Image', { uri: image, name: filename, type });
+            }
+
             const response = await fetch(updateProfileUrl, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({
-                    userId: currentUser.userId,
-                    userName: username,
-                    email: email,
-                    smartPoints: currentUser.smartPoints,
-                    plasticBottle: currentUser.plasticBottle,
-                    rank: currentUser.rank,
-                    co2: currentUser.co2,
-                    accumulatedSP: currentUser.accumulatedSP
-                }),
+                body: formData,
             });
-    
-            if (response.ok) { // Check if the request was successful
+
+            if (response.ok) {
                 const data = await response.json();
-                // Update user in context
-                setCurrentUser({ ...currentUser, userName: username, email: email });
-    
-                // Store updated user in AsyncStorage
+                setCurrentUser({ ...currentUser, userName: username, email });
                 Alert.alert('Success', 'Profile updated successfully');
             } else {
-                const errorData = await response.json(); // Try to parse error message
+                const errorData = await response.json();
                 setErrorMessage(errorData.message || 'Failed to update profile');
             }
         } catch (err) {
-            console.log('Error:', err); // Log the error for debugging
+            console.log('Error:', err);
             setErrorMessage('Something went wrong. Please try again.');
         }
     };
-    
- 
 
     return (
         <View style={styles.container}>
-
             <View style={styles.circleContainer}>
                 <View style={styles.profileBG}>
-                    <Image source={User} style={styles.profilePic} />
-                    <View style={styles.editPicContainer}>
-                        <Image source={Camera} style={styles.editPicIcon} />
-                    </View>
+                        <Image 
+                            source={image ? { uri: image } : { uri: currentUser.Image }} 
+                            style={styles.profilePic} 
+                        />
+                    <TouchableOpacity style={styles.editPicContainer} onPress={pickImage}>
+                        <Image source={require('../icons/camera.png')} style={styles.editPicIcon} />
+                    </TouchableOpacity>
                 </View>
             </View>
 
-       
-            <View style={styles.customBox}>
-            </View>
+            <View style={styles.customBox}></View>
 
-        
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.input}
@@ -94,7 +109,6 @@ export default function EditProfilePage() {
                 />
                 {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 
-               
                 <TouchableOpacity style={styles.saveButton} onPress={handleUpdate}>
                     <Text style={styles.buttonText}>Save and Update</Text>
                 </TouchableOpacity>

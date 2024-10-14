@@ -33,7 +33,9 @@ const LoginPage = ({ navigation }) => {
 
             await AsyncStorage.setItem('userId', data.user.userId.toString());
             await AsyncStorage.setItem('token', data.token);
+            console.log(data.user)
             setCurrentUser(data.user);
+
 
 
           

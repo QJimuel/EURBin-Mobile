@@ -20,6 +20,7 @@ export const UserProvider = ({ children }) => {
         accumulatedSP: 0,
         isActive: true,
         creationDate: '',
+        Image: ''
     });
 
     return (
