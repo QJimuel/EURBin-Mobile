@@ -82,7 +82,7 @@ export default function EditProfilePage() {
             <View style={styles.circleContainer}>
                 <View style={styles.profileBG}>
                         <Image 
-                            source={image ? { uri: image } : { uri: currentUser.Image }} 
+                            source={image ? { uri: image } : { uri: currentUser.Image,  cache: 'force-cache' }} 
                             style={styles.profilePic} 
                         />
                     <TouchableOpacity style={styles.editPicContainer} onPress={pickImage}>
@@ -90,6 +90,8 @@ export default function EditProfilePage() {
                     </TouchableOpacity>
                 </View>
             </View>
+
+       
 
             <View style={styles.customBox}></View>
 
@@ -108,6 +110,8 @@ export default function EditProfilePage() {
                     keyboardType="email-address"
                 />
                 {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+
+              
 
                 <TouchableOpacity style={styles.saveButton} onPress={handleUpdate}>
                     <Text style={styles.buttonText}>Save and Update</Text>
@@ -149,8 +153,9 @@ const styles = StyleSheet.create({
         borderColor: 'black',
     },
     profilePic: {
-        width: 100,
-        height: 100,
+        width: 200,
+        height: 200,
+        borderRadius: 100
     },
     editPicContainer: {
         width: 50,

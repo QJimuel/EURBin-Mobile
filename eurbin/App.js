@@ -19,7 +19,8 @@ import LandingPage from './pages/LandingPage';
 import SignUp from './pages/SignUpPage';
 import AchievementPage from './pages/AchievementPage';
 import AnalyticsPage from './pages/AnalyticsPage';
-
+import InstructionPage from './pages/InstructionPage';
+import RecyclePage from './pages/RecyclePage';
 
 
 import { UserProvider } from './pages/UserContext/User'; 
@@ -81,6 +82,8 @@ export default function App() {
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="Achievement" component={AchievementPage} />
         <Stack.Screen name="Analytics" component={AnalyticsPage} />
+        <Stack.Screen name="Instruction" component={InstructionPage} />
+        <Stack.Screen name="Recycle" component={RecyclePage} />
       
       </Stack.Navigator>
  

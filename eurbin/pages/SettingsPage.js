@@ -61,7 +61,14 @@ export default function SettingsPage({ navigation }) {
 
             <View style={styles.combinedBox}>
                 <View style={styles.profileBox}>
-                    <Image source={User} style={styles.profilePic} />
+                <Image 
+                    source={ 
+                    currentUser.Image 
+                        ? { uri: currentUser.Image, cache: 'force-cache' } 
+                        : User 
+                    } 
+                    style={styles.profilePic} 
+                />
                     <Text style={styles.profileText}>{currentUser.userName}</Text>
                 </View>
                 <View style={styles.underline} />
@@ -182,9 +189,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     profilePic: {
-        width: 40,
-        height: 40,
-        marginRight: 60,
+        width: 60,
+        height: 60,
+        borderRadius: 100,
+        marginRight: 20,
     },
     profileText: {
         color: '#800000',
