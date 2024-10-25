@@ -120,7 +120,7 @@ const handleSubmit = async () => {
 
         const data = await response.json();
         console.log('User created:', data);
-        navigation.navigate('Login'); // Redirect to login after successful registration
+        navigation.navigate('Otp', { email: email }); // Redirect to login after successful registration
     } catch (error) {
         setErrorMessage('Failed to create account: ' + error.message);
     }

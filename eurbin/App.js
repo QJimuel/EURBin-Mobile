@@ -21,6 +21,7 @@ import AchievementPage from './pages/AchievementPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 import InstructionPage from './pages/InstructionPage';
 import RecyclePage from './pages/RecyclePage';
+import OTPVerification from './pages/OtpPage';
 
 
 import { UserProvider } from './pages/UserContext/User'; 
@@ -84,6 +85,7 @@ export default function App() {
         <Stack.Screen name="Analytics" component={AnalyticsPage} />
         <Stack.Screen name="Instruction" component={InstructionPage} />
         <Stack.Screen name="Recycle" component={RecyclePage} />
+        <Stack.Screen name="Otp" component={OTPVerification} />
       
       </Stack.Navigator>
  

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity } from 'react-native';
-import { View, Text, StyleSheet, Image, ScrollView, Alert } from 'react-native';
+import { TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import Trophy from '../icons/trophy2.png';
 import { useUser } from './UserContext/User';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,89 +8,109 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function GoalPage() {
   const { currentUser, setCurrentUser } = useUser();
   const [acknowledgement, setAcknowledgement] = useState('');
-  const [claimedGoals, setClaimedGoals] = useState(new Array(5).fill(false)); // Array to track claimed goals
+  const [userRanks, setUserRanks] = useState([]); // Store user ranks
 
   const goals = [
-    { title: 'Going for Emerald', description: 'Throw 50 plastic bottles', points: 100, requiredBottles: 50 },
-    { title: 'Going for Crusader', description: 'Throw 100 plastic bottles', points: 200, requiredBottles: 100 },
-    { title: 'Going for Archon', description: 'Throw 369 plastic bottles', points: 400, requiredBottles: 369 },
-    { title: 'Going for Divine', description: 'Throw 500 plastic bottles', points: 1000, requiredBottles: 500 },
-    { title: 'Going for Immortal', description: 'Throw 1000 plastic bottles', points: 2000, requiredBottles: 1000 },
+    { title: 'Emerald', description: 'Throw 50 plastic bottles', points: 100, requiredBottles: 50 },
+    { title: 'Crusader', description: 'Throw 100 plastic bottles', points: 200, requiredBottles: 100 },
+    { title: 'Archon', description: 'Throw 369 plastic bottles', points: 400, requiredBottles: 369 },
+    { title: 'Divine', description: 'Throw 500 plastic bottles', points: 1000, requiredBottles: 500 },
+    { title: 'Immortal', description: 'Throw 1000 plastic bottles', points: 2000, requiredBottles: 1000 },
   ];
 
-  // Load claimed goals from AsyncStorage on mount
+  // Fetch the user's ranks from the backend
   useEffect(() => {
-    const loadClaimedGoals = async () => {
+    const fetchUserRanks = async () => {
       try {
-        const storedGoals = await AsyncStorage.getItem('claimedGoals');
-        if (storedGoals) {
-          setClaimedGoals(JSON.parse(storedGoals));
-        }
+        const token = await AsyncStorage.getItem('token');
+        const response = await fetch(
+          `https://eurbin.vercel.app/rank`,
+          {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ userId: currentUser.userId })
+          }
+        );
+  
+        const data = await response.json();
+        console.log('Full API Response:', data); // Log the full API response
+  
+        // Ensure we're only extracting ranks with a defined 'rank' property
+        const ranks = data.ranks ? data.ranks.filter(rank => rank.rank) : [];
+  
+        setUserRanks(ranks.map(rank => rank.rank)); // Extract only rank titles
+        console.log(userRanks); // Log extracted ranks for debugging
       } catch (error) {
-        Alert.alert('Error', 'Failed to load claimed goals');
+        Alert.alert('Error', error.message);
       }
     };
-
-    loadClaimedGoals();
+  
+    fetchUserRanks();
   }, []);
+  
+  
 
   // Handle claiming a goal
-  const handleClaim = async (index, goal) => {
-    const token = await AsyncStorage.getItem('token'); // Ensure token is retrieved for the fetch request
+  const handleClaim = async (goal) => {
+    try {
+      const token = await AsyncStorage.getItem('token');
 
-    if (currentUser.plasticBottle >= goal.requiredBottles) {
-      const newSmartPoints = currentUser.smartPoints + goal.points;
+      if (currentUser.plasticBottle >= goal.requiredBottles) {
+        const newSmartPoints = currentUser.smartPoints + goal.points;
 
-      // Update claimed goals locally
-      try {
-        const newClaimedGoals = [...claimedGoals];
-        newClaimedGoals[index] = true; // Mark this goal as claimed
-
-        // Update AsyncStorage with new claimed goals
-        await AsyncStorage.setItem('claimedGoals', JSON.stringify(newClaimedGoals));
-
-        // Update current user points (you can save this locally or with your backend if needed)
         const updatedUser = {
           ...currentUser,
           smartPoints: newSmartPoints,
         };
 
-        // Fetch request to update the backend
-        const response = await fetch(`https://eurbin.vercel.app/user/${currentUser.userId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            userId: currentUser.userId,
-            userName: currentUser.userName,
-            email: currentUser.email,
-            smartPoints: newSmartPoints,
-            plasticBottle: currentUser.plasticBottle, // Keep plasticBottle count intact
-            rank: currentUser.rank,
-            co2: currentUser.co2,
-            accumulatedSP: currentUser.accumulatedSP,
-            claimedGoals: newClaimedGoals, // Pass the claimed goals array
-          }),
-        });
+        const userResponse = await fetch(
+          `https://eurbin.vercel.app/user/${currentUser.userId}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(updatedUser),
+          }
+        );
 
-        if (!response.ok) {
-          throw new Error('Failed to update user data');
-        }
+        if (!userResponse.ok) throw new Error('Failed to update user data');
+        const updatedUserFromServer = await userResponse.json();
+        setCurrentUser(updatedUserFromServer);
 
-        // Update user state with the response from the backend
-        const updatedUserFromServer = await response.json();
-        setCurrentUser(updatedUserFromServer); // Update user context
-        setClaimedGoals(newClaimedGoals); // Update local state
-        setAcknowledgement(`Claimed ${goal.points} Smart Points!`);
-      } catch (error) {
-        Alert.alert('Error', error.message);
+        const rankResponse = await fetch(
+          `https://eurbin.vercel.app/rank`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              userId: currentUser.userId,
+              rank: goal.title,
+            }),
+          }
+        );
+
+        if (!rankResponse.ok) throw new Error('Failed to update rank');
+
+        setAcknowledgement(`Claimed ${goal.points} Smart Points for ${goal.title}!`);
+        setUserRanks((prevRanks) => [...prevRanks, goal.title]); // Add the new rank to state
+      } else {
+        Alert.alert('Not Enough Bottles', 'You do not have enough plastic bottles to claim this reward.');
       }
-    } else {
-      Alert.alert('Not Enough Bottles', 'You do not have enough plastic bottles to claim this reward.');
+    } catch (error) {
+      Alert.alert('Error', error.message);
     }
   };
+
+  // Check if the goal is already claimed
+  const isGoalClaimed = (goalTitle) => userRanks.includes(goalTitle);
 
   return (
     <View style={styles.container}>
@@ -113,15 +133,19 @@ export default function GoalPage() {
             <View style={styles.points}>
               <Text style={styles.pointsText}>{goal.points}</Text>
               <Text style={styles.pointsText}>Smart Points</Text>
-              {claimedGoals[index] ? (
-                <Text style={styles.status}>Claimed</Text> // If claimed, show "Claimed"
-              ) : (
-                <TouchableOpacity onPress={() => handleClaim(index, goal)}>
-                  <Text style={styles.status}>
-                    {currentUser.plasticBottle >= goal.requiredBottles ? 'Claim' : 'Not enough'}
-                  </Text>
-                </TouchableOpacity>
-              )}
+              <TouchableOpacity
+                onPress={() => handleClaim(goal)}
+                disabled={isGoalClaimed(goal.title)}
+              >
+                <Text
+                  style={[
+                    styles.status,
+                    isGoalClaimed(goal.title) && styles.claimedStatus,
+                  ]}
+                >
+                  {isGoalClaimed(goal.title) ? 'Claimed' : 'Claim'}
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         ))}
@@ -133,62 +157,16 @@ export default function GoalPage() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'flex-start',
-  },
-  customBox: {
-    width: '100%',
-    height: 200,
-    backgroundColor: '#800000',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-  },
-  rText: {
-    fontWeight: 'bold',
-    fontSize: 30,
-    padding: 10,
-  },
-  card: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    height: 80,
-    padding: 15,
-    backgroundColor: '#fff',
-    borderColor: '#b3b3b3',
-    borderWidth: 1,
-    borderRadius: 20,
-    margin: 8,
-    alignItems: 'center',
-  },
-  rankContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  icon: {
-    width: 25,
-    height: 25,
-    marginRight: 15,
-  },
-  rankTitle: {
-    fontSize: 20,
-  },
-  rankDescription: {
-    color: '#b3b3b3',
-  },
-  points: {
-    alignItems: 'center',
-  },
-  status: {
-    marginTop: 3,
-    color: '#b3b3b3',
-    textDecorationLine: 'underline',
-  },
-  acknowledgement: {
-    marginTop: 10,
-    fontSize: 16,
-    color: '#47AA2E',
-    textAlign: 'center',
-  },
+  container: { flex: 1, backgroundColor: '#fff', justifyContent: 'flex-start' },
+  customBox: { width: '100%', height: 200, backgroundColor: '#800000', borderBottomLeftRadius: 20, borderBottomRightRadius: 20 },
+  rText: { fontWeight: 'bold', fontSize: 30, padding: 10 },
+  card: { flexDirection: 'row', justifyContent: 'space-between', height: 80, padding: 15, backgroundColor: '#fff', borderColor: '#b3b3b3', borderWidth: 1, borderRadius: 20, margin: 8, alignItems: 'center' },
+  rankContent: { flexDirection: 'row', alignItems: 'center' },
+  icon: { width: 25, height: 25, marginRight: 15 },
+  rankTitle: { fontSize: 20 },
+  rankDescription: { color: '#b3b3b3' },
+  points: { alignItems: 'center' },
+  status: { marginTop: 3, color: '#b3b3b3', textDecorationLine: 'underline' },
+  claimedStatus: { color: 'green', textDecorationLine: 'none' },
+  acknowledgement: { marginTop: 10, fontSize: 16, color: '#47AA2E', textAlign: 'center' },
 });
