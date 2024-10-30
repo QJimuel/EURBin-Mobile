@@ -166,7 +166,7 @@ const closeModal = () => {
       <View style={styles.customBox}>
         
         <Text style={styles.boxTextsmall}>Smart Points </Text>
-        <Text style={styles.boxText}>{currentUser.smartPoints}</Text>
+        <Text style={styles.boxText}>{currentUser.smartPoints.toFixed(2)}</Text>
         <TouchableOpacity style={styles.redeemButton} onPress={() => setModalVisible(true)}>
           <Image source={Redeem} style={styles.redeemIcon} />
           <Text style={styles.redeemText}>Redeem</Text>
@@ -330,8 +330,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Manjari-Regular',
   },
   whiteBox: {
-    width: '90%',
-    height: 220,
+    width: '80%',
+    height: 200,
     backgroundColor: '#fff',
     marginTop: -20,
     borderRadius: 10,
@@ -365,8 +365,8 @@ const styles = StyleSheet.create({
     
   },
   icon: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
   },
   iconText: {
     marginTop: 5,
@@ -466,7 +466,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   aboutBox: {
-    width: '90%',
+    width: '80%',
     height: 50,
     backgroundColor: '#fff',
     marginTop: 10,
@@ -480,9 +480,10 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   aboutImg: {
-    height: 30,
-    width: 30,
+    height: 25,
+    width: 25,
     marginRight: 15,
+    alignSelf: 'center',
   },
   aboutRow: {
     marginLeft: 30,
@@ -495,15 +496,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   nextImg: {
-    height: 30,
-    width: 30,
+    height: 20,
+    width: 20,
     transform: [{ scaleX: -1 }],
     alignSelf: 'flex-end',
     marginEnd: 15,
+    alignSelf: 'center',
   },
   wwcText: {
     marginTop: 15,
-    marginStart: '5%',
+    marginStart: '10%',
     alignSelf: 'flex-start',
     color: '#2B0100',
     fontFamily: 'Manjari-Bold',
@@ -511,7 +513,7 @@ const styles = StyleSheet.create({
     flexShrink: 1, 
   },
   wwcBox: {
-    width: '90%',
+    width: '80%',
     height: 140,
     backgroundColor: '#fff',
     marginTop: 5,
@@ -524,11 +526,11 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 5,
     position: 'relative',
-    padding: 2,
+    padding: 10,
   },
   bottleImg: {
-    height: 100,
-    width: 120,
+    height: 80,
+    width: 100,
     marginEnd: 16,
   },
   wwcRow: {
@@ -548,12 +550,11 @@ const styles = StyleSheet.create({
   },
   wwcTitle: {
     fontSize: 20,
-    marginBottom: 10,
+    marginBottom: 3,
     color: '#2B0100',
     fontFamily: 'Manjari-Bold',
   },
   wwcDyk: {
-    marginBottom: 5,
     fontSize: 15,
     color: '#2B0100',
     fontFamily: 'Manjari-Regular',

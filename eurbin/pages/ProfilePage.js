@@ -60,6 +60,7 @@ const ProfilePage = ({ navigation }) => {
           />
       </View>
         <Text style={styles.boxText}>{currentUser.userName}</Text>
+        <Text style={styles.secondBoxText}>{currentUser.role}</Text>
         <Text style={styles.secondBoxText}>{currentUser.yearLevel} {currentUser.department}</Text>
       </View>
 
@@ -160,7 +161,7 @@ const styles = StyleSheet.create({
   },
   customBox: {
     width: '100%',
-    height: 200,
+    height: 215,
     backgroundColor: '#800000',
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
@@ -186,7 +187,7 @@ const styles = StyleSheet.create({
   },
   achievementGoalsButton: {
     backgroundColor: '#800000',
-    marginTop: 20,
+    marginTop: 15,
     borderRadius: 20,
     height: 50,
     width: 155,

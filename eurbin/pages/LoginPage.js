@@ -83,10 +83,10 @@ const LoginPage = ({ navigation }) => {
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Text style={styles.signupText}>Don't have an account? Sign up</Text>
-        </TouchableOpacity>
+        <Text style={styles.loginPrompt}>
+          Don't have an account?
+        <Text onPress={() => navigation.navigate('SignUp')} style={styles.loginLink}> Sign Up</Text>
+      </Text>
       </View>
     </View>
   );
@@ -147,5 +147,13 @@ const styles = StyleSheet.create({
   signupText: {
     color: '#800000',
     marginTop: 20,
+  },
+  loginPrompt: {
+    marginTop: 20,
+    color: '#2b0100',
+  },
+  loginLink: {
+    color: '#800000',
+    fontWeight: 'bold',
   },
 });

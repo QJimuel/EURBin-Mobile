@@ -50,7 +50,7 @@ export default function App() {
           component={HomePage}
           options={({ navigation }) => ({
             headerLeft: () => (
-              <TouchableOpacity onPress={() =>   navigation.navigate('Setting')}>
+              <TouchableOpacity onPress={() =>   navigation.navigate('Settings')}>
                 <Image
                   source={Menu}
                   style={{ width: 25, height: 25, marginLeft: 15 }}
@@ -70,17 +70,17 @@ export default function App() {
         
         <Stack.Screen name="About" component={AboutPage} />
         <Stack.Screen name="Reward" component={RewardPage} />
-        <Stack.Screen name="Login" component={LoginPage} />
+        <Stack.Screen name="Login" component={LoginPage} options={{headerShown: false}}/>
         <Stack.Screen name="Profile" component={ProfilePage} />
         <Stack.Screen name="Leaderboard" component={LeaderboardPage} />
         <Stack.Screen name="Transaction" component={TransactionPage} />
         <Stack.Screen name="Goal" component={GoalPage} />
         <Stack.Screen name="Location" component={LocationPage} />
-        <Stack.Screen name="Setting" component={SettingsPage} />
+        <Stack.Screen name="Settings" component={SettingsPage} />
         <Stack.Screen name="Edit Profile" component={EditProfilePage} />
 
-        <Stack.Screen name="Landing" component={LandingPage} />
-        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="Landing" component={LandingPage} options={{headerShown: false}} />
+        <Stack.Screen name="SignUp" component={SignUp} options={{headerShown: false}}/>
         <Stack.Screen name="Achievement" component={AchievementPage} />
         <Stack.Screen name="Analytics" component={AnalyticsPage} />
         <Stack.Screen name="Instruction" component={InstructionPage} />

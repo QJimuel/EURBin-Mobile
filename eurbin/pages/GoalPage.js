@@ -11,11 +11,11 @@ export default function GoalPage() {
   const [userRanks, setUserRanks] = useState([]); // Store user ranks
 
   const goals = [
-    { title: 'Emerald', description: 'Throw 50 plastic bottles', points: 100, requiredBottles: 50 },
-    { title: 'Crusader', description: 'Throw 100 plastic bottles', points: 200, requiredBottles: 100 },
-    { title: 'Archon', description: 'Throw 369 plastic bottles', points: 400, requiredBottles: 369 },
-    { title: 'Divine', description: 'Throw 500 plastic bottles', points: 1000, requiredBottles: 500 },
-    { title: 'Immortal', description: 'Throw 1000 plastic bottles', points: 2000, requiredBottles: 1000 },
+    { title: 'Emerald', description: 'Throw 50 plastic bottles', points: 100, requiredBottles: 50, color: '#47AA2E' },
+    { title: 'Crusader', description: 'Throw 100 plastic bottles', points: 200, requiredBottles: 100, color: '#0A781C' },
+    { title: 'Archon', description: 'Throw 369 plastic bottles', points: 400, requiredBottles: 369, color: '#EFE720' },
+    { title: 'Divine', description: 'Throw 500 plastic bottles', points: 1000, requiredBottles: 500, color: '#F51C5D' },
+    { title: 'Immortal', description: 'Throw 1000 plastic bottles', points: 2000, requiredBottles: 1000, color: '#FD0D0D' },
   ];
 
   // Fetch the user's ranks from the backend
@@ -124,7 +124,7 @@ export default function GoalPage() {
         {goals.map((goal, index) => (
           <View key={index} style={styles.card}>
             <View style={styles.rankContent}>
-              <Image source={Trophy} style={styles.icon} />
+              <Image source={Trophy} style={[styles.icon, { tintColor: goal.color }]}  />
               <View>
                 <Text style={styles.rankTitle}>{goal.title}</Text>
                 <Text style={styles.rankDescription}>{goal.description}</Text>
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
   rankTitle: { fontSize: 20 },
   rankDescription: { color: '#b3b3b3' },
   points: { alignItems: 'center' },
-  status: { marginTop: 3, color: '#b3b3b3', textDecorationLine: 'underline' },
-  claimedStatus: { color: 'green', textDecorationLine: 'none' },
+  status: { marginTop: 3, color: 'green'},
+  claimedStatus: { color: '#b3b3b3',  },
   acknowledgement: { marginTop: 10, fontSize: 16, color: '#47AA2E', textAlign: 'center' },
 });

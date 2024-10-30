@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, ActivityIndicator, Dimensions, TouchableOpacity, Modal, Alert, Image} from 'react-native';
 import { useUser } from './UserContext/User';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Check from '../icons/successCheck.png';
 
 const RewardPage = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -9,6 +10,7 @@ const RewardPage = () => {
   const [rewards, setRewards] = useState([]);
   const [loading, setLoading] = useState(true);
   const { currentUser, setCurrentUser } = useUser();
+  const [modalReceipt, setModalReceipt] = useState(false);
 
   useEffect(() => {
     const fetchRewards = async () => {
@@ -127,9 +129,10 @@ const RewardPage = () => {
                     if (rewardResponse.ok) {
                        
                         setModalVisible(false);
+                        setModalReceipt(true);
 
                         
-                        Alert.alert('Purchase Successful', `You have bought ${selectedReward.RewardName} for ${selectedReward.Price} SP!`);
+                        
                     } else {
                         throw new Error('Reward update failed');
                     }
@@ -221,6 +224,33 @@ const RewardPage = () => {
           </View>
         </View>
       </Modal>
+
+      <Modal
+        animationType="none"
+        transparent={true}
+        visible={modalReceipt}
+        onRequestClose={() => setModalReceipt(!modalReceipt)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalViewReceipt}>
+            <Image source={Check} style={styles.check}></Image>
+            <Text style={styles.receiptTitle}>Purchase Successful!</Text>
+            {selectedReward && (
+              <>
+                
+                <Text style={styles.receiptText}>You've successfully bought <Text style={{fontWeight: '500'}}>{selectedReward.RewardName}</Text> for <Text style={{fontWeight: '500'}}>{selectedReward.Price}</Text> SmartPoints.</Text>
+                <Text style={styles.receiptThanks}>Claim it in HSO Office!</Text>
+                <TouchableOpacity style={styles.buyMButton} onPress={() => setModalReceipt(false)}>
+                  <Text style={styles.buyMText}>OK</Text>
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
+
+
+
     </View>
   );
 }
@@ -359,6 +389,43 @@ const styles = StyleSheet.create({
     height: 70,
     width: 70,
     borderRadius: 5
-  }
-  
+  },
+  modalViewReceipt: {
+    width: 300,
+    height: 350,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  check: {
+    height: 60,
+    width: 60,
+    tintColor: '#2b0100',
+  },
+  receiptTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 15,
+    marginBottom: 15,
+    color: '#2b0100',
+  },
+  receiptThanks: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#2b0100',
+    marginBottom: 20,
+  },
+  receiptText: {
+    fontSize: 15,
+    textAlign: 'center',
+    marginBottom: 20,
+    color: '#2b0100',
+  },
 });

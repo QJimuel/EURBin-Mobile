@@ -44,7 +44,11 @@ const LeaderboardPage = () => {
   const renderItem = ({ item, index }) => (
     <View style={styles.userRow}>
       <Text style={styles.rank}>{index + 1}</Text>
-    
+      {item.Image ? (
+                <Image source={{ uri: item.Image }} style={styles.picIcon2} />
+              ) : (
+                <Image source={User} style={styles.picIcon2} />
+              )}
       <Text style={styles.username}>{item.userName}</Text>
 
       <Text style={styles.points}>{item.accumulatedSP.toFixed(1)}</Text>
@@ -74,7 +78,11 @@ const LeaderboardPage = () => {
           return (
             <View key={user.userId} style={styles.topUserRow}>
               <View style={[styles.profilePic, { borderColor }]}>
+              {user.Image ? (
+                <Image source={{ uri: user.Image }} style={styles.picIcon1} />
+              ) : (
                 <Image source={User} style={styles.picIcon} />
+              )}
                 <View style={[styles.topRank, { borderColor, backgroundColor }]}>
                   <Text style={styles.topRankText}>{index + 1}</Text>
                 </View>
@@ -142,15 +150,11 @@ const styles = StyleSheet.create({
   topUserRow: {
     alignItems: 'center',
     width: 90,
-
-   
   },
   topRank: {
-   
     fontWeight: 'bold',
     fontSize: 18,
     borderWidth: 2,
-    
     width: 30,
     height: 30,
     justifyContent: 'center',
@@ -159,7 +163,6 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '45deg' }],
     position: 'absolute', 
     bottom: -20
-    
   },
   topUserName: {
     color: '#fff',
@@ -169,7 +172,6 @@ const styles = StyleSheet.create({
   },
   topPoints: {
     color: '#fff',
-
     bottom: -20
   },
   whiteBox: {
@@ -232,6 +234,16 @@ const styles = StyleSheet.create({
   picIcon: {
     width: 40,
     height: 40,
+  },
+  picIcon1: {
+    width: 94,
+    height: 94,
+    borderRadius: 100
+  },
+  picIcon2: {
+    width: 30,
+    height: 30,
+    borderRadius: 100,
   },
   profilePic: {
     width: 100,
