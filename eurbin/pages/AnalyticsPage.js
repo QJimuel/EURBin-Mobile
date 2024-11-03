@@ -39,6 +39,24 @@ export default function AnalyticsPage() {
         transaction => transaction.userId.toString() === currentUser.userId.toString()
     );
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "2-digit"
+        });
+      };
+    
+      const formatTime = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true
+        });
+      };
+
     // Map rewards and count user-specific transactions for each reward
     const rewardNames = rewards.map(reward => reward.RewardName);
     const transactionCounts = rewards.map(reward => {
@@ -73,7 +91,7 @@ export default function AnalyticsPage() {
                 </View>
                 <View style={styles.column}>
                     <Text style={styles.transactionAmount}>-{item.transactionPrice} SmartPoints</Text>
-                    <Text style={styles.transactionDate}>{item.date}</Text>
+                    <Text style={styles.transactionDate}>{formatDate(item.date)} {formatTime(item.date)}</Text>
                     <Text style={styles.transactionRef}>ref. {item.referenceNo}</Text>
                 </View>
             </View>
@@ -151,19 +169,21 @@ export default function AnalyticsPage() {
     };
 
     return (
+<>
+<View style={styles.customBox}>
+                    <Text style={styles.co2Text}>{currentUser.co2.toFixed(2)} kg</Text>
+                    <Text style={styles.co2ReductionText}>CO2 Reduction</Text>
+                </View>
+        
         <FlatList
             style={{ backgroundColor: '#fff' }}
             data={data}
             renderItem={renderItem}
             keyExtractor={(item) => item.key}
-            ListHeaderComponent={
-                <View style={styles.customBox}>
-                    <Text style={styles.co2Text}>{currentUser.co2.toFixed(2)} kg</Text>
-                    <Text style={styles.co2ReductionText}>CO2 Reduction</Text>
-                </View>
-            }
+       
             contentContainerStyle={{ flexGrow: 1 }}
         />
+        </>
     );
 }
 

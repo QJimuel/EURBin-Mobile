@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Three from '../icons/three_student.png';
+import Logo from '../icons/Eurbin.png'
+
 
 const LandingPage = ({navigation}) => {
 

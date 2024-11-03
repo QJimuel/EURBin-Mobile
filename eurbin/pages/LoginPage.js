@@ -1,9 +1,13 @@
 // screens/LoginPage.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Button ,Alert} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Button ,Alert, Image} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Show from '../icons/view.png';
+import Hide from '../icons/hide.png';
+import Logo from '../icons/Eurbin.png'
 
 import { useUser } from './UserContext/User';
+
 
 const LoginPage = ({ navigation }) => {
     const [username, setUsername] = useState('');
@@ -36,11 +40,6 @@ const LoginPage = ({ navigation }) => {
             console.log(data.user)
             setCurrentUser(data.user);
 
-
-
-          
-          
-
               navigation.navigate('Home');
           } else {
               Alert.alert('Error', data.message || 'Invalid credentials');
@@ -56,7 +55,8 @@ const LoginPage = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.box}>
-        <Text style={styles.title}>EURBin</Text>
+        <Image style={styles.logo} source={Logo}></Image>
+        
         
         <TextInput
           style={styles.input}
@@ -65,18 +65,25 @@ const LoginPage = ({ navigation }) => {
           onChangeText={setUsername}
         />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={!passwordVisible}
-        />
-        <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
-          <Text style={styles.togglePassword}>
-            {passwordVisible ? 'Hide' : 'Show'}
-          </Text>
+        <View style={styles.pswrdBox}>
+          <TextInput
+            style={styles.inputpswd}
+            placeholder="Enter Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!passwordVisible}
+          />
+        <View style={styles.iconBox}>
+          <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
+          
+            <Image style={styles.icon} source={passwordVisible ? Hide : Show}/>
+         
         </TouchableOpacity>
+        </View>
+        </View>
+
+        <Text onPress={() => navigation.navigate('ForgotPassword')} style={styles.forgotLink}> Forgot Password?</Text>
+
 
         {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
 
@@ -104,7 +111,6 @@ const styles = StyleSheet.create({
   box: {
     width: 300,
     height: 300,
-   
     borderRadius: 50,
     padding: 20,
     justifyContent: 'center',
@@ -121,6 +127,15 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#f4f4f4',
     borderRadius: 10,
+    paddingHorizontal: 10,
+    marginBottom: 20,
+  },
+  inputpswd: {
+    height: 60,
+    width: '75%',
+    backgroundColor: '#f4f4f4',
+    borderBottomLeftRadius: 10,
+    borderTopLeftRadius: 10,
     paddingHorizontal: 10,
     marginBottom: 20,
   },
@@ -156,4 +171,33 @@ const styles = StyleSheet.create({
     color: '#800000',
     fontWeight: 'bold',
   },
+  pswrdBox: {
+    flexDirection: 'row',
+  },
+  iconBox: {
+    height: 60,
+    width: '25%',
+    backgroundColor: '#f4f4f4',
+    paddingHorizontal: 10,
+    marginBottom: 20,
+    borderBottomRightRadius: 10,
+    borderTopRightRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  icon: {
+    height: 20,
+    width: 20,
+    alignSelf: 'center',
+    tintColor: '#2b0100',
+  },
+  forgotLink: {
+    color: '#2b100',
+
+  },
+  logo:{
+    height: 300,
+    width: 300,
+    tintColor: '##EFE720'
+  }
 });

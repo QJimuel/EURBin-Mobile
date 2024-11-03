@@ -62,6 +62,7 @@ const ProfilePage = ({ navigation }) => {
         <Text style={styles.boxText}>{currentUser.userName}</Text>
         <Text style={styles.secondBoxText}>{currentUser.role}</Text>
         <Text style={styles.secondBoxText}>{currentUser.yearLevel} {currentUser.department}</Text>
+        <Text style={styles.secondBoxText}>{currentUser.program}</Text>
       </View>
 
       <View style={styles.buttonRow}>
@@ -161,7 +162,7 @@ const styles = StyleSheet.create({
   },
   customBox: {
     width: '100%',
-    height: 215,
+    height: 220,
     backgroundColor: '#800000',
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
@@ -177,6 +178,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 13,
     fontFamily: 'Manjari-Regular',
+    lineHeight: 13.5, 
   },
   buttonRow: {
     flexDirection: 'row',
@@ -223,8 +225,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   coBox: {
-    width: 230,
-    height: 90,
+    width: 225,
+    height: 85,
     backgroundColor: '#800000',
     justifyContent: 'center',
     alignItems: 'center',
@@ -263,6 +265,7 @@ const styles = StyleSheet.create({
     borderColor: '#000',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 5,
   },
   picIcon: {
     width: 110,

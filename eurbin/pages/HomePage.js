@@ -166,7 +166,9 @@ const closeModal = () => {
       <View style={styles.customBox}>
         
         <Text style={styles.boxTextsmall}>Smart Points </Text>
-        <Text style={styles.boxText}>{currentUser.smartPoints.toFixed(2)}</Text>
+        <Text style={styles.boxText}>
+          {Number(currentUser.smartPoints).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+        </Text>
         <TouchableOpacity style={styles.redeemButton} onPress={() => setModalVisible(true)}>
           <Image source={Redeem} style={styles.redeemIcon} />
           <Text style={styles.redeemText}>Redeem</Text>
@@ -182,7 +184,7 @@ const closeModal = () => {
               <Image source={Send} style={styles.icon} />
               <Text style={styles.iconText}>Exchange</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconContainer} onPress={() => navigation.navigate('Login')}>
+            <TouchableOpacity style={styles.iconContainer} onPress={() => navigation.navigate('Reward')}>
               <Image source={Reward} style={styles.icon} />
               <Text style={styles.iconText}>Reward</Text>
             </TouchableOpacity>

@@ -21,6 +21,10 @@ export default function SettingsPage({ navigation }) {
         toggleModal();
     };
 
+    const formatEmail = (email) => {
+        return email ? `${email.slice(0, 3)}****@gmail.com` : '';
+      };
+
     const handleUpdatePassword = async () => {
         const token = await AsyncStorage.getItem('token');
         if (!oldPassword || !newPassword) {
@@ -69,7 +73,12 @@ export default function SettingsPage({ navigation }) {
                     } 
                     style={styles.profilePic} 
                 />
+                <View style={styles.userDetails}>
                     <Text style={styles.profileText}>{currentUser.userName}</Text>
+                    <Text style={styles.secondBoxText}>{formatEmail(currentUser.email)}</Text>
+                   {/* <Text style={styles.secondBoxText}>{currentUser.yearLevel} {currentUser.department}</Text>
+                    <Text style={styles.textAdjust} numberOfLines={2} ellipsizeMode="tail">{currentUser.program}</Text>*/}
+                </View>    
                 </View>
                 <View style={styles.underline} />
 
@@ -193,13 +202,15 @@ const styles = StyleSheet.create({
         height: 60,
         borderRadius: 100,
         marginRight: 20,
+        borderWidth: 1,
+        borderColor: '#000',
     },
     profileText: {
         color: '#800000',
         fontSize: 20,
         fontWeight: 'bold',
         marginTop: 5,
-        marginBottom: 15,
+        marginBottom: 5,
     },
     underline: {
         height: 2,
@@ -280,5 +291,21 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    secondBoxText: {
+        color: '#2b0100',
+        fontSize: 12,
+        maxWidth: '100%',
+        //textAlign: 'center',
+    },
+    userDetails: {
+        flexDirection: 'column',
+    },
+    textAdjust: {
+        fontSize: 10, 
+        flexShrink: 1, 
+        color: '#2B0100',
+        maxWidth: '90%',
+        //textAlign: 'center'
     },
 });
