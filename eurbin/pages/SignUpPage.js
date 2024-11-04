@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView , Image} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Checkbox } from 'react-native-paper';
+import Logo from '../icons/Eurbin.png'
 
 const SignUp = ({ navigation }) => {
   // State for form fields
@@ -21,6 +22,18 @@ const SignUp = ({ navigation }) => {
   const [program, setProgram] = useState(null);
   const [programOpen, setProgramOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+
+ // State to track input errors
+ const [inputErrors, setInputErrors] = useState({
+  username: false,
+  email: false,
+  password: false,
+  confirmPassword: false,
+  role: false,
+  department: false,
+  yearLevel: false,
+  program: false,
+});
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
@@ -108,14 +121,95 @@ useEffect(() => {
 
 // Updated handleSubmit function
 const handleSubmit = async () => {
-    if (password !== confirmPassword) {
-        setErrorMessage('Passwords do not match');
-        return;
-    } 
-    if (!role) {
-        setErrorMessage('Please select a role');
-        return;
-    } 
+  // Reset errors
+  setInputErrors({
+    username: false,
+    email: false,
+    password: false,
+    confirmPassword: false,
+    role: false,
+    department: false,
+    yearLevel: false,
+    program: false,
+  });
+  setErrorMessage('');
+
+  let hasError = false;
+
+  // Email validation to ensure only @gmail.com addresses are allowed
+  const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
+  // Check for empty fields and set error states
+  if (!username) {
+    setInputErrors((prev) => ({ ...prev, username: true }));
+    hasError = true;
+  }
+  if (!email) {
+    setInputErrors((prev) => ({ ...prev, email: true }));
+    setErrorMessage('Required Field');
+    hasError = true;
+  } 
+  else if (email && !gmailRegex.test(email)) {
+    setInputErrors((prev) => ({ ...prev, email: true }));
+    setErrorMessage('Invalid email format. Only @gmail.com addresses are allowed.');
+    hasError = true;
+  }
+  if (!password) {
+    setInputErrors((prev) => ({ ...prev, password: true }));
+    hasError = true;
+  }
+  if (!confirmPassword) {
+    setInputErrors((prev) => ({ ...prev, confirmPassword: true }));
+    hasError = true;
+  }
+  if (!role) {
+    setInputErrors((prev) => ({ ...prev, role: true }));
+    hasError = true;
+  }
+  if (role === 'Student') {
+    if (!department) {
+      setInputErrors((prev) => ({ ...prev, department: true }));
+      hasError = true;
+    }
+    if (!yearLevel) {
+      setInputErrors((prev) => ({ ...prev, yearLevel: true }));
+      hasError = true;
+    }
+    if (!program) {
+      setInputErrors((prev) => ({ ...prev, program: true }));
+      hasError = true;
+    }
+  }
+  else if (role === 'ETEEAP' || role === 'Staff') {
+    // For Faculty, ETEEAP, and Staff, do not check department, yearLevel, or program
+    // Optionally, add additional checks if needed for these roles
+  }
+  else if (role === 'Faculty'){
+    if (!department) {
+      setInputErrors((prev) => ({ ...prev, department: true }));
+      setErrorMessage('Required Field');
+      hasError = true;
+    }
+  }
+
+  if (!username || !password || !confirmPassword || !role) {
+    setErrorMessage('Required Field');
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    setErrorMessage('Passwords do not match');
+    return;
+  }
+
+  if (!isChecked) {
+    setErrorMessage('You must accept the Terms and Conditions to proceed');
+    return;
+  }
+
+  if (hasError) return; // Prevent submission if there are errors
+
+
 
     const newUser = {
         userName: username,
@@ -156,11 +250,15 @@ const handleSubmit = async () => {
 
 return (
     <KeyboardAvoidingView behavior="padding" style={styles.container}>
-      <View style={styles.backgroundCircle} />
+      <View style={styles.backgroundCircle} >
+      <Image source={Logo} style={styles.image} resizeMode="contain" />
+      </View>
+
+
       
       <View style={styles.nameRole1}>
       <TextInput
-        style={styles.input}
+        style={[ styles.input, inputErrors.username && styles.inputError ]}
         placeholder="Enter Username"
         value={username}
         onChangeText={setUsername}
@@ -176,7 +274,7 @@ return (
         setOpen={setRoleOpen}
         setValue={handleRoleChange}
         placeholder="Role" 
-        style={styles.dropdown}
+        style={[ styles.dropdown, inputErrors.role && styles.inputError ]}
         dropDownContainerStyle={styles.dropdownContainer}
       />
 </View></View>
@@ -192,8 +290,8 @@ return (
             items={departmentOptions}
             setOpen={setDepartmentOpen}
             setValue={handleDepartmentChange}
-            placeholder="Choose Department"
-            style={styles.dropdown2}
+            placeholder="Department"
+            style={[ styles.dropdown2, inputErrors.department && styles.inputError ]}
             dropDownContainerStyle={styles.dropdownContainer}
           />
     </View>
@@ -206,7 +304,7 @@ return (
             setOpen={setYearLevelOpen}
             setValue={setYearLevel}
             placeholder="Year Level"
-            style={styles.dropdown}
+            style={[ styles.dropdown, inputErrors.yearLevel && styles.inputError ]}
             dropDownContainerStyle={styles.dropdownContainer}
           />
     </View>
@@ -220,7 +318,7 @@ return (
             setOpen={setProgramOpen}
             setValue={setProgram}
             placeholder="Program"
-            style={styles.dropdown3}
+            style={[ styles.dropdown3, inputErrors.program && styles.inputError ]}
             dropDownContainerStyle={styles.dropdownContainer}
             disabled={!department}
             placeholderStyle={{
@@ -243,14 +341,14 @@ return (
           setOpen={setDepartmentOpen}
           setValue={setDepartment}
           placeholder="Choose Department"
-          style={styles.dropdown3}
+          style={[ styles.dropdown3, inputErrors.department && styles.inputError ]}
           dropDownContainerStyle={styles.dropdownContainer}
         />
 </View>
 )}
 
       <TextInput
-        style={styles.input1}
+        style={[ styles.input1, inputErrors.email && styles.inputError ]}
         placeholder="Enter Email"
         value={email}
         onChangeText={setEmail}
@@ -260,7 +358,7 @@ return (
 
   <View style={styles.nameRole}>
       <TextInput
-        style={styles.input2}
+        style={[ styles.input2, inputErrors.password && styles.inputError ]}
         placeholder="Enter Password"
         value={password}
         secureTextEntry
@@ -268,7 +366,7 @@ return (
       />
 
       <TextInput
-        style={styles.input2}
+        style={[ styles.input2, inputErrors.confirmPassword && styles.inputError ]}
         placeholder="Confirm Password"
         value={confirmPassword}
         secureTextEntry
@@ -291,11 +389,12 @@ return (
     </View>
 
 <View style={styles.caButton}>
+{errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Create Account</Text>
       </TouchableOpacity>
 
-      {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+      
 
       <Text style={styles.loginPrompt}>
         Have an account?
@@ -313,8 +412,21 @@ const styles = StyleSheet.create({
     height: 400,
     borderRadius: 200,
     backgroundColor: '#800000',
+    justifyContent: 'center', // Aligns items to the top
+    alignItems: 'flex-start', 
     top: -100,
     left: -100,
+   
+  },
+  image: {
+    width: 150,
+    height: 150,
+    marginTop: 50,
+    marginLeft: 100,
+    
+    
+    tintColor: '#fff'
+    
   },
   container: {
     flex: 1,
@@ -459,6 +571,12 @@ const styles = StyleSheet.create({
     color: '#800000',
     textDecorationLine: 'underline',
   },
+  inputError: {
+    borderColor: 'red',
+    borderWidth: 1,
+  },
+
+
 });
 
 export default SignUp;

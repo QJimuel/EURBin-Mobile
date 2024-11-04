@@ -164,8 +164,9 @@ const RewardPage = () => {
   const renderReward = ({ item }) => (
     <View style={styles.rewardContainer}>
       <Image source={{ uri: item.Image }} style={styles.rewardImage} /> 
-      <Text style={styles.rewardText}>Reward: {item.RewardName}</Text>
-      <Text style={styles.rewardText}>Price: {item.Price} SP</Text>
+      <Text style={styles.rewardText}>{item.RewardName}</Text>
+      <Text style={styles.rewardPrice}>Price: {item.Price} SmartPoints</Text>
+      
       <TouchableOpacity style={styles.buyButton} onPress={() => openModal(item)}>
           <Text style={styles.buyText}>Buy</Text>
       </TouchableOpacity>
@@ -176,7 +177,9 @@ const RewardPage = () => {
   return (
     <View style={styles.container}>
       <View style={styles.customBox}>
-        <Text style={styles.customBoxTextP}>{currentUser.smartPoints}</Text>
+        <Text style={styles.customBoxTextP}>
+        {Number(currentUser.smartPoints).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+        </Text>
         <Text style={styles.customBoxTextSP}>Smart Points</Text>
       </View>
 
@@ -204,7 +207,8 @@ const RewardPage = () => {
               <>
                 <Image source={{ uri: selectedReward.Image }} style={styles.rewardImage} />
                 <Text style={styles.modalText}>Reward: {selectedReward.RewardName}</Text>
-                <Text style={styles.modalText}>Price: {selectedReward.Price} SP</Text>
+                <Text style={styles.modalText}>Price: {selectedReward.Price} SmartPoints</Text>
+               
                 <View style={styles.modalButtons}>
                   <TouchableOpacity
                     style={styles.cancelMButton}
@@ -279,15 +283,20 @@ const styles = StyleSheet.create({
   customBoxTextP: {
     color: '#fff',
     fontSize: 24,
-    fontWeight: 'bold',
+
     marginTop: 70,
-    marginRight: 170,
+    fontFamily: 'Poppins',
+    fontWeight: '900',
+    marginRight: '50%'
+   
   },
   customBoxTextSP: {
     color: '#fff',
     fontSize: 14,
-    fontWeight: 'bold',
-    marginRight: 170,
+   
+    marginRight: '50%',
+    fontFamily: 'Manjari',
+    fontWeight: '900',
   },
   flatListContainer: {
     paddingHorizontal: 8,  
@@ -295,10 +304,10 @@ const styles = StyleSheet.create({
   },
   rewardContainer: {
     width: (screenWidth / 2) - 24,  
-    height: 200,
-    padding: 20,
+    height: 240,
+    padding: 15,
     backgroundColor: '#fff',
-    borderColor: '#5e0005',
+    borderColor: '#2b0100',
     borderWidth: 1,
     borderRadius: 10,
     margin: 8,  
@@ -307,12 +316,35 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
     elevation: 3,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 20
  
   },
   rewardText: {
-    fontSize: 16,
+    fontSize: 20,
     marginBottom: 5,
-    color: '#333',
+    fontFamily: 'Poppins',
+    fontWeight: '900',
+    color: '#2b0100',
+    alignSelf: 'flex-start'
+  },
+  rewardPrice: {
+    fontSize: 14,
+    marginTop: -20,
+    fontFamily: 'Manjari',
+    fontWeight: '600',
+    color: '#2b0100',
+    alignSelf: 'flex-start',
+  },
+  rewardSPtext: {
+    fontSize: 12,
+    marginTop: -20,
+    fontFamily: 'Manjari',
+    fontWeight: '600',
+    color: '#2b0100',
+    alignSelf: 'flex-start',
+    letterSpacing: -1
   },
   loader: {
     flex: 1,
@@ -321,12 +353,12 @@ const styles = StyleSheet.create({
   },
   buyButton: {
     backgroundColor: '#5e0005',
-    borderRadius: 20,
+    borderRadius: 10,
     height: 35,
     justifyContent: 'center',
     alignItems: 'center',
     width: 70,
-    marginLeft: 70
+    marginLeft: '50%'
   },
   buyText: {
     color: 'white',

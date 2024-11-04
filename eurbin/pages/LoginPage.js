@@ -54,6 +54,7 @@ const LoginPage = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.backgroundCircle} />
       <View style={styles.box}>
         <Image style={styles.logo} source={Logo}></Image>
         
@@ -150,6 +151,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+    fontFamily: 'Manjari'
   },
   togglePassword: {
     color: '#800000',
@@ -192,12 +194,24 @@ const styles = StyleSheet.create({
     tintColor: '#2b0100',
   },
   forgotLink: {
-    color: '#2b100',
-
+    color: '#800000',
+    fontWeight: '500',
+    alignSelf: 'flex-start',
+    marginTop: -10,
+    
   },
   logo:{
-    height: 300,
-    width: 300,
-    tintColor: '##EFE720'
-  }
+    height: 250,
+    width: 250,
+    tintColor: '#fff'
+  },
+  backgroundCircle: {
+    position: 'absolute',
+    width: 550,
+    height: 550,
+    borderRadius: 200,
+    backgroundColor: '#800000',
+    top: -120,
+    
+  },
 });

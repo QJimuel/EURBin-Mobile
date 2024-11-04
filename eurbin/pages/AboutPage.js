@@ -4,6 +4,7 @@ import CO2 from '../icons/co2_colored.png';
 import Point from '../icons/point.png'; 
 import { View, Text, Image, StyleSheet, ScrollView ,ActivityIndicator } from 'react-native';
 import * as Font from 'expo-font';
+import Bot from '../icons/5.png';
 
 export default function AboutPage() {
 
@@ -24,13 +25,20 @@ export default function AboutPage() {
   }
   return (
     <ScrollView style={styles.container}>
+            <View style={styles.backgroundCircle} >
+            <Text style={styles.header}>About EURBin</Text>
+      </View>
+
       {/* About Section */}
+      <View style={styles.content}>
+
+     
       <View style={styles.section}>
-        <Text style={styles.header}>About EURBin</Text>
+        
         <Text style={styles.paragraph}>
           EURBin is an innovative solution aimed at promoting sustainable waste management through the use of IoT technology. This smart bin accepts plastic bottles and rewards users with Smart Points (SP) that can be exchanged for tangible rewards at the MSEUF Health and Safety Office.
         </Text>
-        <Image source={Bottle} style={styles.image} />
+        <Image source={Bot} style={styles.image} />
       </View>
 
       {/* Benefits Section */}
@@ -91,6 +99,7 @@ export default function AboutPage() {
           We plan to expand EURBin to more locations and introduce new features in our app to enhance user experience.
         </Text>
       </View>
+      </View>
     </ScrollView>
   );
 }
@@ -101,15 +110,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 20,
   },
+  content: {
+    marginBottom: 10,
+    marginTop: 180,
+  },
   section: {
     marginBottom: 10,
     marginTop: 10,
   },
   header: {
-    color: '#2B0100',
+    color: '#fff',
     fontFamily: 'Manjari-Bold',
     fontSize: 24,
     marginBottom: 10,
+    marginTop: 80,
+    marginLeft: 60,
   },
   subHeader: {
     color: '#2B0100',
@@ -163,5 +178,20 @@ const styles = StyleSheet.create({
   },
   link: {
     color: '#800000',
+  },
+  backgroundCircle: {
+    position: 'absolute',
+    width: 260,
+    height: 260,
+    borderRadius: 200,
+    backgroundColor: '#800000',
+    justifyContent: 'center', // Aligns items to the top
+    alignItems: 'center',
+    justifyContent: 'center', 
+    top: -100,
+    left:-100,
+    padding: 40
+
+   
   },
 });

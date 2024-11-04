@@ -9,12 +9,14 @@ const LandingPage = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.backgroundCircle} />
+      <View style={styles.backgroundCircle} >
+        
+      </View>
 
       <View style={styles.content}>
-        <Image source={Three} style={styles.image} resizeMode="contain" />
+        <Image source={Logo} style={styles.image} resizeMode="contain" />
 
-        <Text style={styles.title}>EURBin</Text>
+        <Text style={styles.title}></Text>
 
         <Text style={styles.description}>
           EURBin are here to promote recycling, educate users and to create a
@@ -40,12 +42,12 @@ const styles = StyleSheet.create({
   },
   backgroundCircle: {
     position: 'absolute',
-    width: 400,
-    height: 400,
-    borderRadius: 200,
+    width: 550,
+    height: 550,
+    borderRadius: 270,
     backgroundColor: '#800000',
-    top: -120,
-    left: -100,
+    top: -110,
+
   },
   content: {
     alignItems: 'center',
@@ -53,13 +55,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
   },
   image: {
-    width: 250,
-    height: 250,
+    width: 300,
+    height: 300,
+    tintColor: '#fff'
+    
   },
   title: {
-    fontSize: 60,
+    fontSize: 20,
     fontWeight: '800',
-    marginVertical: 20,
+    
+    alignSelf: 'flex-start'
   },
   description: {
     textAlign: 'center',

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ActivityIndicator } from 'react-native';
+import Logo from '../icons/Eurbin.png';
 
 import * as Font from 'expo-font';
 
@@ -17,7 +18,7 @@ const OTPVerification = ({ route, navigation }) => {
     
         // If deleting
         if (text === '') {
-            newOtp[index] = ''; // Clear the value
+            newOtp[index] = ''; // Clear the value 
             setOtp(newOtp);
             if (index > 0) {
                 otpRefs[index - 1].current.focus(); // Move back on delete if not first
@@ -74,6 +75,7 @@ const OTPVerification = ({ route, navigation }) => {
   }
     return (
         <View style={styles.container}>
+            <Image source={Logo} style={styles.image} resizeMode="contain" />
         
             <Text style={styles.title}><Text style={styles.boldText}>Verify Code</Text></Text>
             <Text style={styles.subtitle}>Please enter the verification code that sent to <Text style={styles.subtitle2}>{email}</Text></Text>
@@ -184,6 +186,10 @@ const styles = StyleSheet.create({
         color: '#800000',
         fontWeight: 'bold',
 
+    },
+    image: {
+        width: 150,
+        height: 150,
     },
 });
 

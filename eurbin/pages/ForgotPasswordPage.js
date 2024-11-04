@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import Logo from '../icons/Eurbin.png';
 
 const ForgotPasswordPage = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+      
 
     const onSubmit = async () => {
         try {
@@ -29,8 +31,12 @@ const ForgotPasswordPage = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+        <View style={styles.backgroundCircle} />
+            <View style={styles.box}>
+            <Image source={Logo} style={styles.logo} resizeMode="contain" />
+            <Text style={styles.title}>Find your account</Text>
             <TextInput
-                style={styles.input}
+                style={ styles.input }
                 placeholder="Enter Email"
                 value={email}
                 onChangeText={setEmail}
@@ -40,30 +46,50 @@ const ForgotPasswordPage = ({ navigation }) => {
             </TouchableOpacity>
             {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
             {successMessage ? <Text style={styles.success}>{successMessage}</Text> : null}
-        </View>
+        </View></View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#fff',
         justifyContent: 'center',
+        alignItems: 'center',
+    },
+    box: {
+        width: 300,
+        height: 300,
+        borderRadius: 50,
         padding: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     input: {
-        borderBottomWidth: 1,
-        marginBottom: 15,
-        fontSize: 18,
-    },
-    button: {
-        backgroundColor: '#007AFF',
-        padding: 15,
-        alignItems: 'center',
+        height: 60,
+        width: '100%',
+        backgroundColor: '#f4f4f4',
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        marginBottom: 20,
+      },
+      button: {
+        backgroundColor: '#800000',
         borderRadius: 5,
+        paddingVertical: 15,
+        width: '100%', 
+        marginTop: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        
     },
     buttonText: {
         color: '#fff',
-        fontSize: 18,
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontFamily: 'Manjari',
+        
     },
     error: {
         color: 'red',
@@ -72,6 +98,30 @@ const styles = StyleSheet.create({
     success: {
         color: 'green',
         marginTop: 10,
+    },
+    logo:{
+        height: 150,
+        width: 150,
+        tintColor: '##EFE720',
+        marginBottom: 20,
+       
+    },
+    backgroundCircle: {
+        position: 'absolute',
+        width: 350,
+        height: 350,
+        borderRadius: 200,
+        backgroundColor: '#800000',
+        top: -120,
+        left: -100,
+    },
+    title: {
+        fontWeight: '600',
+        fontSize: 20,
+        color: '#2b0100',
+        marginBottom: 20,
+        fontFamily: 'Manjari',
+        alignSelf: 'flex-start',
     },
 });
 

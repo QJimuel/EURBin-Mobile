@@ -12,6 +12,10 @@ import Bottle from '../icons/bottles.png';
 import About from '../icons/information.png';
 import Next from '../icons/back.png';
 import Arrow from '../icons/greater-than.jpg';
+import Logo from '../icons/Eurbin.png';
+import * as Font from 'expo-font';
+
+
 
 import { useUser } from './UserContext/User';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -26,7 +30,17 @@ const HomePage = ({ navigation }) => {
   const [currentModalIndex, setCurrentModalIndex] = useState(0); 
   const postedContents = contents.filter(item => item.isPosted === true); 
 
-  
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        'Manjari-Regular': require('../assets/fonts/Manjari-Regular.ttf'),
+        'Manjari-Bold': require('../assets/fonts/Manjari-Bold.ttf'),
+      });
+      setFontsLoaded(true);
+    };
+    loadFonts();
+  }, []);
 
   useEffect(() => {
     const fetchContents = async () => {
@@ -164,6 +178,11 @@ const closeModal = () => {
     <SafeAreaView style={styles.container}>
 
       <View style={styles.customBox}>
+      <Image
+                source={Logo}  
+                style={{ width: 80, height: 80, tintColor: '#fff', marginTop: -30 }}  
+                resizeMode="contain" 
+              />
         
         <Text style={styles.boxTextsmall}>Smart Points </Text>
         <Text style={styles.boxText}>
@@ -312,7 +331,7 @@ const styles = StyleSheet.create({
   },
   customBox: {
     width: '100%',
-    height: 200,
+    height: 240,
     backgroundColor: '#800000',
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
@@ -322,9 +341,9 @@ const styles = StyleSheet.create({
   boxText: {
     color: '#fff',
     fontSize: 22,
-    fontWeight: 'bold',
     padding: 5,
-    fontFamily: 'Manjari-Bold',
+    fontFamily: 'Poppins',
+    fontWeight: '900',
   },
   boxTextsmall: {
     color: '#fff',

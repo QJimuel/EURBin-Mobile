@@ -23,6 +23,7 @@ import InstructionPage from './pages/InstructionPage';
 import RecyclePage from './pages/RecyclePage';
 import OTPVerification from './pages/OtpPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import Logo from './icons/Eurbin.png';
 
 
 import { UserProvider } from './pages/UserContext/User'; 
@@ -66,6 +67,12 @@ export default function App() {
                 />
               </TouchableOpacity>
             ),
+            headerTitle: () => (
+              ""
+            ),
+           
+         
+            headerBackVisible: false, 
           })}
         />
         
@@ -86,8 +93,8 @@ export default function App() {
         <Stack.Screen name="Analytics" component={AnalyticsPage} />
         <Stack.Screen name="Instruction" component={InstructionPage} />
         <Stack.Screen name="Recycle" component={RecyclePage} />
-        <Stack.Screen name="Otp" component={OTPVerification} />
-        <Stack.Screen name="ForgotPassword" component={ForgotPasswordPage} />
+        <Stack.Screen name="Otp" component={OTPVerification}options={{headerShown: false}} />
+        <Stack.Screen name="ForgotPassword" component={ForgotPasswordPage} options={{headerShown: false}}/>
       
       </Stack.Navigator>
  

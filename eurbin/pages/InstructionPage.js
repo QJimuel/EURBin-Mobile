@@ -1,47 +1,44 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
+import Step1 from '../icons/1.png';
+import Step2 from '../icons/2.png';
+import Step3 from '../icons/3.png';
+import Step4 from '../icons/4.png';
 
 export default function InstructionPage() {
   return (
     <ScrollView style={styles.container}>
+      <View style={styles.backgroundCircle} >
+      <Text style={styles.subHeader}>How to Use EURBin</Text>
+      </View>
       <View style={styles.section}>
-        <Text style={styles.subHeader}>How to Use EURBin</Text>
-        <View style={styles.stepsWrapper}>
-          <View style={styles.stepContainer}>
-            <Image source={require('../icons/bottle.png')} style={styles.stepImage} />
-            <Text style={styles.stepTitle}>Step 1</Text>
-            <Text style={styles.stepDescription}>Locate the EURBin.</Text>
-          </View>
 
-          <View style={styles.stepContainer}>
-            <Image source={require('../icons/bottle.png')} style={styles.stepImage} />
-            <Text style={styles.stepTitle}>Step 2</Text>
+      
+        <View style={styles.stepsWrapper}>
+        <View style={styles.stepContainer}>
+            <Image source={Step1} style={styles.stepImage} />
+            <Text style={styles.stepTitle}>Step 1</Text>
             <Text style={styles.stepDescription}>Deposit your plastic bottle into the bin.</Text>
           </View>
 
           <View style={styles.stepContainer}>
-            <Image source={require('../icons/bottle.png')} style={styles.stepImage} />
+            <Image source={Step2} style={styles.stepImage} />
+            <Text style={styles.stepTitle}>Step 2</Text>
+            <Text style={styles.stepDescription}>Receive a redeemable code displayed on the bin.</Text>
+          </View>
+
+          <View style={styles.stepContainer}>
+            <Image source={Step3} style={styles.stepImage} />
             <Text style={styles.stepTitle}>Step 3</Text>
-            <Text style={styles.stepDescription}>The bin will display a code for you to enter in the app.</Text>
+            <Text style={styles.stepDescription}>Enter the redeemable code to earn Smart Points.</Text>
           </View>
 
           <View style={styles.stepContainer}>
-            <Image source={require('../icons/bottle.png')} style={styles.stepImage} />
+            <Image source={Step4} style={styles.stepImage} />
             <Text style={styles.stepTitle}>Step 4</Text>
-            <Text style={styles.stepDescription}>Open the EURBin app.</Text>
-          </View>
-
-          <View style={styles.stepContainer}>
-            <Image source={require('../icons/bottle.png')} style={styles.stepImage} />
-            <Text style={styles.stepTitle}>Step 5</Text>
-            <Text style={styles.stepDescription}>Enter the redeemable code to earn Smart Points (SP).</Text>
-          </View>
-
-          <View style={styles.stepContainer}>
-            <Image source={require('../icons/bottle.png')} style={styles.stepImage} />
-            <Text style={styles.stepTitle}>Step 6</Text>
             <Text style={styles.stepDescription}>Exchange your Smart Points for exciting rewards!</Text>
           </View>
+
         </View>
       </View>
     </ScrollView>
@@ -56,13 +53,16 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: 30,
-    marginTop: 20,
+    marginTop: 150,
   },
   subHeader: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: '#800000',
-    marginBottom: 10,
+    color: '#fff',
+    marginTop: 80,
+    marginLeft: 80,
+    fontFamily: 'Manjari'
+
   },
   stepsWrapper: {
     flexDirection: 'column',
@@ -88,5 +88,19 @@ const styles = StyleSheet.create({
   stepDescription: {
     fontSize: 16,
     textAlign: 'center',
+  },
+  backgroundCircle: {
+    position: 'absolute',
+    width: 250,
+    height: 250,
+    borderRadius: 200,
+    backgroundColor: '#800000',
+    justifyContent: 'center', // Aligns items to the top
+    alignItems: 'center',
+    justifyContent: 'center', 
+    top: -100,
+    left:-100
+
+   
   },
 });
