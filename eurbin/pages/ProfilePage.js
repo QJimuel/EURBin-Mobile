@@ -14,7 +14,7 @@ const ProfilePage = ({ navigation }) => {
   const [bottles, setBottles] = useState([]);
  
 
-  
+    
   useEffect(() => {
     const fetchBottles = async () => {
       try {
