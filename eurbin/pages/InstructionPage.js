@@ -49,11 +49,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingHorizontal: 20,
+   
   },
   section: {
     marginBottom: 30,
     marginTop: 150,
+    paddingHorizontal: 20,
   },
   subHeader: {
     fontSize: 18,

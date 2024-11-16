@@ -14,6 +14,8 @@ import Next from '../icons/back.png';
 import Arrow from '../icons/greater-than.jpg';
 import Logo from '../icons/Eurbin.png';
 import * as Font from 'expo-font';
+import User from '../icons/user22.png'
+import Menu from '../icons/menu.png'; 
 
 
 
@@ -45,21 +47,33 @@ const HomePage = ({ navigation }) => {
   useEffect(() => {
     const fetchContents = async () => {
       try {
-        const response = await fetch('https://eurbin.vercel.app/contents');
+        const token = await AsyncStorage.getItem('token'); // Retrieve token
+        const response = await fetch('https://eurbin.vercel.app/contents', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` // Add token to Authorization header
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+  
         const json = await response.json();
         setContents(json.content);
-        
+  
         if (json.content.some(item => item.isPosted === true)) {
           setModalContentVisible(true);
         }
-
       } catch (error) {
         console.error('Error fetching contents:', error);
       }
     };
-
+  
     fetchContents();
-  },[]);
+  }, []);
+  
 
 
   const handleRedeemSubmit = async () => {
@@ -68,13 +82,14 @@ const HomePage = ({ navigation }) => {
         const redeemData = {
             redeemCode: redeemCode, 
             userId: currentUser.userId 
-        };  
+        };    
 
 
         const response = await fetch('https://eurbin.vercel.app/code', {
             method: 'PUT', 
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(redeemData),
         });
@@ -175,12 +190,21 @@ const closeModal = () => {
 
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
 
       <View style={styles.customBox}>
+
+        <View style={styles.newNav}>
+          <TouchableOpacity style={styles.menu} onPress={() =>   navigation.navigate('Settings')}><Image source={Menu}
+          style={{ width: 25, height: 25, tintColor: '#2b0100'}}/></TouchableOpacity>
+          <TouchableOpacity style={styles.user} onPress={() => navigation.navigate('Profile')}><Image source={User}
+          style={{ width: 25, height: 25, tintColor: '#2b0100'}}/></TouchableOpacity>
+        </View>
+
+
       <Image
                 source={Logo}  
-                style={{ width: 80, height: 80, tintColor: '#fff', marginTop: -30 }}  
+                style={{ width: 80, height: 80, tintColor: '#fff', marginTop: -20 }}  
                 resizeMode="contain" 
               />
         
@@ -316,22 +340,47 @@ const closeModal = () => {
       </Modal>
 
 
-    </SafeAreaView>
+    </View>
   );
 }
 
 export default HomePage;
 
 const styles = StyleSheet.create({
+  newNav:{
+    //marginLeft: 30,
+    
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '70%',
+  
+
+
+
+  },
+  menu: {
+    //alignSelf: 'flex-start',
+    //marginLeft: 15,
+    //alignSelf: 'center',
+  },
+  user: {
+    //alignSelf: 'flex-end',
+    //marginEnd: 15,
+    //alignSelf: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
     justifyContent: 'flex-start',
     alignItems: 'center',
+    
+  
   },
   customBox: {
+    
     width: '100%',
-    height: 240,
+    height: 300, //240
     backgroundColor: '#800000',
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
@@ -363,26 +412,29 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 5,
+   
   },
   iconGrid: {
     width: '100%',
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    gap: 10
   },
   iconRow: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    
     alignItems: 'center',
     marginBottom: 10,
-    width: '100%',
-    paddingHorizontal: 30,
+    
+  
+    
 
   },
   iconContainer: {
     width: 90, 
     alignItems: 'center',
-    marginHorizontal: 10, 
+  
     
   },
   icon: {
@@ -391,7 +443,7 @@ const styles = StyleSheet.create({
   },
   iconText: {
     marginTop: 5,
-    fontSize: 14,
+    fontSize: 13,
     color: '#2B0100',
     fontFamily: 'Manjari-Regular',
   },
@@ -400,7 +452,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#5e0005',
     borderRadius: 5,
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     paddingVertical: 10,
     marginTop: 10,
     gap: 5,
@@ -413,7 +465,7 @@ const styles = StyleSheet.create({
   },
   redeemText: {
     color: '#fff',
-    fontSize: 15,
+    fontSize: 13,
     fontFamily: 'Manjari-Regular',
   },
   // Modal Styles
@@ -531,7 +583,9 @@ const styles = StyleSheet.create({
     color: '#2B0100',
     fontFamily: 'Manjari-Bold',
     fontSize: 20,
-    flexShrink: 1, 
+    width: '100%',
+    
+  
   },
   wwcBox: {
     width: '80%',

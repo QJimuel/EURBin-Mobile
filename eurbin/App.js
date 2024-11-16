@@ -50,7 +50,8 @@ export default function App() {
         <Stack.Screen 
           name="Home" 
           component={HomePage}
-          options={({ navigation }) => ({
+          options={{headerShown: false}}
+          /*options={({ navigation }) => ({
             headerLeft: () => (
               <TouchableOpacity onPress={() =>   navigation.navigate('Settings')}>
                 <Image
@@ -73,7 +74,7 @@ export default function App() {
            
          
             headerBackVisible: false, 
-          })}
+          })}*/
         />
         
         <Stack.Screen name="About" component={AboutPage} />
@@ -94,7 +95,7 @@ export default function App() {
         <Stack.Screen name="Instruction" component={InstructionPage} />
         <Stack.Screen name="Recycle" component={RecyclePage} />
         <Stack.Screen name="Otp" component={OTPVerification}options={{headerShown: false}} />
-        <Stack.Screen name="ForgotPassword" component={ForgotPasswordPage} options={{headerShown: false}}/>
+        <Stack.Screen name="ForgotPassword" component={ForgotPasswordPage} />
       
       </Stack.Navigator>
  

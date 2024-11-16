@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView , Image} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { Checkbox } from 'react-native-paper';
+
 import Logo from '../icons/Eurbin.png'
 
 const SignUp = ({ navigation }) => {
-  // State for form fields
+ 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  // State for dropdowns
+  
   const [role, setRole] = useState(null);
   const [roleOpen, setRoleOpen] = useState(false);
   const [department, setDepartment] = useState(null);
@@ -23,7 +23,7 @@ const SignUp = ({ navigation }) => {
   const [programOpen, setProgramOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
- // State to track input errors
+
  const [inputErrors, setInputErrors] = useState({
   username: false,
   email: false,
@@ -41,12 +41,12 @@ const SignUp = ({ navigation }) => {
 
   const handleContinue = () => {
     if (isChecked) {
-      // Handle continue action
+     
       alert('You have accepted the Terms and Conditions.');
     }
   };
 
-  // Data for dropdowns
+
   const roleOptions = [
     { label: 'Student', value: 'Student' },
     { label: 'Staff', value: 'Staff' },
@@ -75,7 +75,7 @@ const SignUp = ({ navigation }) => {
     { label: '5th Year', value: '5th Year' },
   ];
 
-  // Department and Programs Data
+ 
   const departmentOptionsData = [
     { label: 'CCMS', programs: ['Entertainment & Multimedia Computing', 'Computer Science', 'Information Technology'] },
     { label: 'CIHTM', programs: ['Hospitality Management', 'Tourism Management'] },
@@ -91,7 +91,7 @@ const SignUp = ({ navigation }) => {
 
   const [programOptions, setProgramOptions] = useState([]);
 
-  // Updated function using useCallback to handle role change
+  
   const handleRoleChange = useCallback((value) => {
   setRole(value);
   setDepartment(null);
@@ -104,14 +104,14 @@ const SignUp = ({ navigation }) => {
   }
   }, []);
 
-  // Updated function using useCallback to handle department change
+  
   const handleDepartmentChange = useCallback((value) => {
   setDepartment(value);
   setProgram(null);
   setYearLevel(null);
   }, []);
 
-// Update program options based on selected department
+
 useEffect(() => {
   const selectedDept = departmentOptions.find((dept) => dept.value === department);
   const deptData = departmentOptionsData.find((dept) => dept.label === selectedDept?.label);
@@ -119,9 +119,9 @@ useEffect(() => {
 }, [department]);
 
 
-// Updated handleSubmit function
+
 const handleSubmit = async () => {
-  // Reset errors
+  
   setInputErrors({
     username: false,
     email: false,
@@ -136,10 +136,10 @@ const handleSubmit = async () => {
 
   let hasError = false;
 
-  // Email validation to ensure only @gmail.com addresses are allowed
+ 
   const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
 
-  // Check for empty fields and set error states
+  
   if (!username) {
     setInputErrors((prev) => ({ ...prev, username: true }));
     hasError = true;
@@ -181,8 +181,7 @@ const handleSubmit = async () => {
     }
   }
   else if (role === 'ETEEAP' || role === 'Staff') {
-    // For Faculty, ETEEAP, and Staff, do not check department, yearLevel, or program
-    // Optionally, add additional checks if needed for these roles
+    
   }
   else if (role === 'Faculty'){
     if (!department) {
@@ -202,12 +201,8 @@ const handleSubmit = async () => {
     return;
   }
 
-  if (!isChecked) {
-    setErrorMessage('You must accept the Terms and Conditions to proceed');
-    return;
-  }
 
-  if (hasError) return; // Prevent submission if there are errors
+  if (hasError) return; 
 
 
 
@@ -219,14 +214,14 @@ const handleSubmit = async () => {
         department: role === 'ETEEAP' || role === 'Staff' ? null : department, // Set department to null if role is ETEEAP or Staff
         program: role === 'ETEEAP' || role === 'Staff' || role === 'Faculty'? null : program, // Set program to null if role is ETEEAP or Staff
         yearLevel: role === 'ETEEAP' || role === 'Staff' || role === 'Faculty' ? null : yearLevel, // Set yearLevel to null if role is ETEEAP or Staff
-        smartPoints: 0, // Default values or handle them as needed
+        smartPoints: 0, 
         plasticBottle: 0,
         rank: 0,
         co2: 0,
         accumulatedSP: 0,
     };
 
-    // Proceed with the fetch request as before
+
     try {
         const response = await fetch('https://eurbin.vercel.app/user', {
             method: 'POST',
@@ -242,7 +237,7 @@ const handleSubmit = async () => {
 
         const data = await response.json();
         console.log('User created:', data);
-        navigation.navigate('Otp', { email: email }); // Redirect to login after successful registration
+        navigation.navigate('Otp', { email: email }); 
     } catch (error) {
         setErrorMessage('Failed to create account: ' + error.message);
     }
@@ -264,8 +259,7 @@ return (
         onChangeText={setUsername}
       />
 
-      {/* Role Dropdown */}
-    {/* Role Dropdown */}
+ 
 <View style={{ zIndex: 1000 }}>
     <DropDownPicker
         open={roleOpen}
@@ -279,7 +273,7 @@ return (
       />
 </View></View>
 
-{/* Conditional rendering for dropdowns */}
+
 {role === 'Student' && (
 <>
   <View style={styles.nameRole1}>
@@ -374,19 +368,7 @@ return (
       />
 </View>
 
-<View style={styles.checkboxContainer}>
-      <Checkbox
-        status={isChecked ? 'checked' : 'unchecked'}
-        onPress={handleCheckboxChange}
-        color="#800000"
-      />
-      <Text style={styles.label}>
-        I agree to the{' '}
-        <Text style={styles.link} onPress={() => alert('Show Terms & Conditions')}>
-          Terms and Conditions
-        </Text>
-      </Text>
-    </View>
+
 
 <View style={styles.caButton}>
 {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
@@ -412,7 +394,7 @@ const styles = StyleSheet.create({
     height: 400,
     borderRadius: 200,
     backgroundColor: '#800000',
-    justifyContent: 'center', // Aligns items to the top
+    justifyContent: 'center', 
     alignItems: 'flex-start', 
     top: -100,
     left: -100,
@@ -456,8 +438,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignItems: 'center',
     backgroundColor: '#fff',
-    position: 'relative',  // Ensure proper stacking
-    zIndex: 1,  // Lower z-index than dropdowns
+    position: 'relative', 
+    zIndex: 1,
   
    
   },
@@ -471,9 +453,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignItems: 'center',
     backgroundColor: '#fff',
-    position: 'relative',  // Ensure proper stacking
-    zIndex: 1,  // Lower z-index than dropdowns
-
+    position: 'relative', 
+    zIndex: 1, 
 
   },
   dropdown: {

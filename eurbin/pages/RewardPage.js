@@ -15,23 +15,36 @@ const RewardPage = () => {
   useEffect(() => {
     const fetchRewards = async () => {
       try {
-        const response = await fetch('https://eurbin.vercel.app/rewards'); 
+        const token = await AsyncStorage.getItem('token'); // Retrieve token
+        const response = await fetch('https://eurbin.vercel.app/rewards', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` // Add token to Authorization header
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+  
         const json = await response.json();
         setRewards(json.rewards);
-        setLoading(false);
       } catch (error) {
         console.error(error);
+      } finally {
         setLoading(false);
       }
     };
-
+  
     fetchRewards();
   }, []);
+  
 
   if (loading) {
     return (
       <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#800000" />
+        <ActivityIndicator  color="#800000" />
       </View>
     );
   }
@@ -94,6 +107,7 @@ const RewardPage = () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify(transactionData),
                 });
@@ -119,6 +133,7 @@ const RewardPage = () => {
                         method: 'PATCH',
                         headers: {
                             'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
                         },
                         body: JSON.stringify(updatedRewardData),
                     });
@@ -161,18 +176,31 @@ const RewardPage = () => {
     setModalVisible(true);   
   };
 
-  const renderReward = ({ item }) => (
-    <View style={styles.rewardContainer}>
-      <Image source={{ uri: item.Image }} style={styles.rewardImage} /> 
-      <Text style={styles.rewardText}>{item.RewardName}</Text>
-      <Text style={styles.rewardPrice}>Price: {item.Price} SmartPoints</Text>
-      
-      <TouchableOpacity style={styles.buyButton} onPress={() => openModal(item)}>
-          <Text style={styles.buyText}>Buy</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  const renderReward = ({ item }) => {
+    const isDisabled = currentUser.smartPoints < item.Price;
   
+    return (
+      <View style={[styles.rewardContainer, isDisabled && {borderColor: 'lightgray', borderWidth: 1}]}>
+        <Image
+          source={{ uri: item.Image }}
+          style={[styles.rewardImage, isDisabled && { opacity: 0.3 }]}
+        />
+        <Text style={[styles.rewardText, isDisabled && {color: 'lightgray'}]}>
+          {item.RewardName}
+        </Text>
+        <Text style={[styles.rewardPrice, isDisabled && {color: 'lightgray'}]}>
+          Price: {item.Price} SmartPoints
+        </Text>
+        <TouchableOpacity
+          style={[styles.buyButton, isDisabled && {borderColor: 'lightgray', borderWidth: 1, backgroundColor: '#fff'}]}
+          onPress={() => !isDisabled && openModal(item)}
+          disabled={isDisabled}
+        >
+          <Text style={[styles.buyText, isDisabled && {color: 'lightgray'}]}>Buy</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -325,7 +353,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 5,
     fontFamily: 'Poppins',
-    fontWeight: '900',
+    fontWeight: 'bold',
     color: '#2b0100',
     alignSelf: 'flex-start'
   },

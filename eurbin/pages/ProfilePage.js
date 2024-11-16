@@ -3,6 +3,7 @@ import { TouchableOpacity, View, Text, StyleSheet, Image } from 'react-native';
 import User from '../icons/user22.png';
 import CO from '../icons/co2.png';
 import { VictoryPie, VictoryLabel, VictoryLegend } from 'victory-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useUser } from './UserContext/User';
 
 
@@ -17,7 +18,19 @@ const ProfilePage = ({ navigation }) => {
   useEffect(() => {
     const fetchBottles = async () => {
       try {
-        const response = await fetch('https://eurbin.vercel.app/bottles');
+        const token = await AsyncStorage.getItem('token'); // Retrieve token
+        const response = await fetch('https://eurbin.vercel.app/bottles', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` // Add token to Authorization header
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+  
         const json = await response.json();
         const userBottles = json.bottles.filter(bottle => Number(bottle.userId) === currentUser.userId);
         setBottles(userBottles);
@@ -25,9 +38,10 @@ const ProfilePage = ({ navigation }) => {
         console.error('Error fetching bottles:', error);
       }
     };
-
+  
     fetchBottles();
   }, [currentUser]);
+  
 
   const smallBottles = bottles.filter(bottle => bottle.Size === 'Small').length;
   const largeBottles = bottles.filter(bottle => bottle.Size === 'Large').length;

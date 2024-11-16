@@ -71,10 +71,14 @@ const OTPVerification = ({ route, navigation }) => {
   }, []);
 
   if (!fontsLoaded) {
-    return <ActivityIndicator size="large" color="yellow" />;
+    return <ActivityIndicator color="yellow" />;
   }
     return (
         <View style={styles.container}>
+            <TouchableOpacity onPress={verifyOTP} style={styles.button}>
+                <Text style={styles.buttonText}><Text style={styles.boldText}>Verify</Text></Text>
+            </TouchableOpacity>
+             
             <Image source={Logo} style={styles.image} resizeMode="contain" />
         
             <Text style={styles.title}><Text style={styles.boldText}>Verify Code</Text></Text>
@@ -93,14 +97,13 @@ const OTPVerification = ({ route, navigation }) => {
                     />
                 ))}
             </View>
+            
             {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
             <Text style={styles.loginPrompt}>
                 Didn't receive the code?
             <Text onPress={() => navigation.navigate('')} style={styles.loginLink}> Resend</Text>
             </Text>
-            <TouchableOpacity onPress={verifyOTP} style={styles.button}>
-                <Text style={styles.buttonText}><Text style={styles.boldText}>Verify</Text></Text>
-            </TouchableOpacity>
+          
         </View>
     );
 };

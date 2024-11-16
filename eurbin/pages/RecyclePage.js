@@ -36,7 +36,7 @@ const ArticlePreview = ({ articleUrl }) => {
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#800000" />;
+    return <ActivityIndicator  color="#800000" />;
   }
 
   return (

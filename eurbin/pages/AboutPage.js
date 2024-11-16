@@ -21,7 +21,7 @@ export default function AboutPage() {
   }, []);
 
   if (!fontsLoaded) {
-    return <ActivityIndicator size="large" color="yellow" />;
+    return <ActivityIndicator  color="yellow" />;
   }
   return (
     <ScrollView style={styles.container}>
@@ -108,11 +108,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingHorizontal: 20,
+
   },
   content: {
     marginBottom: 10,
     marginTop: 180,
+    paddingHorizontal: 20,
   },
   section: {
     marginBottom: 10,

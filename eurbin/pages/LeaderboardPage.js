@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   topThreeContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '100%',
+  
   },
   topUserRow: {
     alignItems: 'center',

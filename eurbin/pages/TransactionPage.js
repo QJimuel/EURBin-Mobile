@@ -1,29 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, Image } from 'react-native';
 import { useUser } from './UserContext/User';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Receipt from '../icons/receipt.jpg';
 
 const TransactionPage = () => {
   const [transactions, setTransactions] = useState([]);
-  const { currentUser } = useUser(); // No need for setCurrentUser if not used
-  const [selectedTransaction, setSelectedTransaction] = useState(null); // Track the selected transaction
-  const [modalVisible, setModalVisible] = useState(false); // Track modal visibilit
-
+  const { currentUser } = useUser(); 
+  const [selectedTransaction, setSelectedTransaction] = useState(null); 
+  const [modalVisible, setModalVisible] = useState(false); 
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await fetch('https://eurbin.vercel.app/transactions'); 
+        const token = await AsyncStorage.getItem('token'); // Retrieve token
+        const response = await fetch('https://eurbin.vercel.app/transactions', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` // Add token to Authorization header
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+  
         const json = await response.json();
-   
         setTransactions(json.transactions);
       } catch (error) {
         console.error(error);
       }
     };
-
+  
     fetchTransactions();
   }, []);
+  
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -43,17 +54,16 @@ const TransactionPage = () => {
     });
   };
 
-  // Handle transaction click
   const onTransactionPress = (item) => {
     setSelectedTransaction(item);
-    setModalVisible(true); // Open modal with transaction details
+    setModalVisible(true); 
   };
 
-  // Render each item in the FlatList
+ 
   const renderItem = ({ item }) => {
-    // Only render if the userId matches
+    
     if (currentUser.userId.toString() !== item.userId) {
-      return null; // Do not render anything if user IDs don't match
+      return null;
     }
 
     // Determine status based on isAccepted
@@ -84,12 +94,12 @@ const TransactionPage = () => {
       <FlatList
         data={transactions}
         renderItem={renderItem}
-        keyExtractor={(item) => item.referenceNo} // Ensure id is a string
-        numColumns={1} // Set number of columns to 1 for the FlatList
+        keyExtractor={(item) => item.referenceNo} 
+        numColumns={1} 
         style={styles.list}
       />
 
-      {/* Modal for displaying transaction details */}
+
        {selectedTransaction && (
         <Modal
           animationType="none"
@@ -194,19 +204,19 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     marginVertical: 5,
-    flexDirection: 'row', // Set to row to create two columns
-    justifyContent: 'space-between', // Space between columns
+    flexDirection: 'row', 
+    justifyContent: 'space-between',
   },
   column: {
-    flex: 1, // Take equal space for each column
-    justifyContent: 'center', // Center content vertically
-    paddingHorizontal: 10, // Add horizontal padding for better spacing
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 10, 
   },
   transactionType: {
     fontWeight: 'bold',
   },
   transactionAmount: {
-    fontWeight: 'bold', // Indicating a deduction
+    fontWeight: 'bold', 
   },
   transactionStatus: {
     color: '#b3b3b3',

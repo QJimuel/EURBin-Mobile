@@ -11,6 +11,7 @@ export default function EditProfilePage() {
     const [errorMessage, setErrorMessage] = useState('');
     const [image, setImage] = useState(null);
 
+    
     const updateProfileUrl = `https://eurbin.vercel.app/user/${currentUser.userId}`;
 
     const pickImage = async () => {
@@ -21,7 +22,7 @@ export default function EditProfilePage() {
         }
 
         const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            mediaTypes: ImagePicker.CameraType.Images,
             allowsEditing: true,
             quality: 1,
         });

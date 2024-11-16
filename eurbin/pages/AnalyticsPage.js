@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, FlatList } from 'react-native';
 import { VictoryBar, VictoryChart, VictoryAxis, VictoryLabel, VictoryTheme } from 'victory-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useUser } from './UserContext/User';
 
 export default function AnalyticsPage() {
@@ -11,28 +12,53 @@ export default function AnalyticsPage() {
 
     useEffect(() => {
         const fetchTransactions = async () => {
-            try {
-                const response = await fetch('https://eurbin.vercel.app/transactions');
-                const json = await response.json();
-                setTransactions(json.transactions);
-            } catch (error) {
-                console.error('Error fetching transactions:', error);
+          try {
+            const token = await AsyncStorage.getItem('token'); // Retrieve token
+            const response = await fetch('https://eurbin.vercel.app/transactions', {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // Add token to Authorization header
+              },
+            });
+      
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
             }
+      
+            const json = await response.json();
+            setTransactions(json.transactions);
+          } catch (error) {
+            console.error('Error fetching transactions:', error);
+          }
         };
-
+      
         const fetchRewards = async () => {
-            try {
-                const response = await fetch('https://eurbin.vercel.app/rewards');
-                const json = await response.json();
-                setRewards(json.rewards);
-            } catch (error) {
-                console.error('Error fetching rewards:', error);
+          try {
+            const token = await AsyncStorage.getItem('token'); // Retrieve token
+            const response = await fetch('https://eurbin.vercel.app/rewards', {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // Add token to Authorization header
+              },
+            });
+      
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
             }
+      
+            const json = await response.json();
+            setRewards(json.rewards);
+          } catch (error) {
+            console.error('Error fetching rewards:', error);
+          }
         };
-
+      
         fetchTransactions();
         fetchRewards();
-    }, [currentUser]);
+      }, [currentUser]);
+      
 
     // Filter transactions to only include those for the current user
     const userTransactions = transactions.filter(
