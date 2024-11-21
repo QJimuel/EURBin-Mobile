@@ -9,7 +9,7 @@ const RewardPage = () => {
   const [selectedReward, setSelectedReward] = useState(null);
   const [rewards, setRewards] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { currentUser, setCurrentUser } = useUser();
+  const {currentUser, setCurrentUser } = useUser();
   const [modalReceipt, setModalReceipt] = useState(false);
 
   useEffect(() => {
@@ -142,6 +142,7 @@ const RewardPage = () => {
                     console.log('Reward Update Response:', rewardResponseData);
 
                     if (rewardResponse.ok) {
+                 
                        
                         setModalVisible(false);
                         setModalReceipt(true);

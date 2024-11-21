@@ -59,12 +59,14 @@ const TransactionPage = () => {
     setModalVisible(true); 
   };
 
+  const userTransactions = transactions.filter(
+    transaction => transaction.userId.toString() === currentUser.userId.toString()
+);
+
+
  
   const renderItem = ({ item }) => {
-    
-    if (currentUser.userId.toString() !== item.userId) {
-      return null;
-    }
+
 
     // Determine status based on isAccepted
     const status = item.isAccepted === null ? 'Pending' : item.isAccepted ? 'Successful' : 'Failed';
@@ -92,7 +94,7 @@ const TransactionPage = () => {
       <View style={styles.customBox}></View>
       <Text style={styles.transactionText}>Transaction</Text>
       <FlatList
-        data={transactions}
+        data={userTransactions}
         renderItem={renderItem}
         keyExtractor={(item) => item.referenceNo} 
         numColumns={1} 

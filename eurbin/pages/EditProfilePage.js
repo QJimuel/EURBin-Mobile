@@ -14,23 +14,35 @@ export default function EditProfilePage() {
     
     const updateProfileUrl = `https://eurbin.vercel.app/user/${currentUser.userId}`;
 
+    
     const pickImage = async () => {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-            Alert.alert('Permission Denied', 'We need access to your gallery to update the profile picture.');
-            return;
-        }
+        console.log('pickImage function called');
 
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.CameraType.Images,
-            allowsEditing: true,
-            quality: 1,
-        });
+        try {
+            // Check permissions
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            console.log('Permission Status:', status);
 
-        if (!result.canceled) {
-            setImage(result.assets[0].uri);
+            if (status !== 'granted') {
+                Alert.alert('Permission Denied', 'We need access to your gallery to update the profile picture.');
+                return;
+            }
+
+            // Launch image library
+            const result = await ImagePicker.launchImageLibraryAsync();
+            console.log('Result:', result);
+
+            if (!result.canceled && result.assets && result.assets.length > 0) {
+                setImage(result.assets[0].uri);
+            } else {
+                console.log('User canceled or no image selected.');
+            }
+        } catch (error) {
+            console.error('Error launching image picker:', error);
+            Alert.alert('Error', 'Unable to open the image picker.');
         }
     };
+
 
     const handleUpdate = async () => {
         const token = await AsyncStorage.getItem('token');

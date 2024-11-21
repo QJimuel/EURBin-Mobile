@@ -133,19 +133,15 @@ export default function GoalPage() {
             <View style={styles.points}>
               <Text style={styles.pointsText}>{goal.points}</Text>
               <Text style={styles.pointsText}>Smart Points</Text>
-              <TouchableOpacity
-                onPress={() => handleClaim(goal)}
-                disabled={isGoalClaimed(goal.title)}
-              >
-                <Text
-                  style={[
-                    styles.status,
-                    isGoalClaimed(goal.title) && styles.claimedStatus,
-                  ]}
-                >
-                  {isGoalClaimed(goal.title) ? 'Claimed' : 'Claim'}
-                </Text>
-              </TouchableOpacity>
+              {isGoalClaimed(goal.title) ? (
+                <Text style={[styles.status, styles.claimedStatus]}>Claimed</Text>
+              ) : currentUser.plasticBottle >= goal.requiredBottles ? (
+                <TouchableOpacity onPress={() => handleClaim(goal)}>
+                  <Text style={styles.status}>Claim</Text>
+                </TouchableOpacity>
+              ) : (
+                <Text style={[styles.status, styles.notEnoughText]}>{goal.requiredBottles - currentUser.plasticBottle}</Text>
+              )}
             </View>
           </View>
         ))}
@@ -169,4 +165,5 @@ const styles = StyleSheet.create({
   status: { marginTop: 3, color: 'green'},
   claimedStatus: { color: '#b3b3b3',  },
   acknowledgement: { marginTop: 10, fontSize: 16, color: '#47AA2E', textAlign: 'center' },
+  notEnoughText: { color: '#b3b3b3', fontSize: 11 },
 });
