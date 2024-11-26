@@ -11,6 +11,7 @@ const RewardPage = () => {
   const [loading, setLoading] = useState(true);
   const {currentUser, setCurrentUser } = useUser();
   const [modalReceipt, setModalReceipt] = useState(false);
+  const [modalReceipt2, setModalReceipt2] = useState(false);
 
   useEffect(() => {
     const fetchRewards = async () => {
@@ -53,6 +54,7 @@ const RewardPage = () => {
     const token = await AsyncStorage.getItem('token');
   
     if (currentUser.smartPoints >= selectedReward.Price) {
+  
 
        
         const updatedSmartPoints = currentUser.smartPoints - selectedReward.Price;
@@ -116,6 +118,8 @@ const RewardPage = () => {
                 console.log('Transaction Response:', transactionResponseData);
 
                 if (transactionResponse.ok) {
+                   
+                 
                   
                     const updatedRewardQuantity = selectedReward.Quantity - 1;
 
@@ -142,10 +146,10 @@ const RewardPage = () => {
                     console.log('Reward Update Response:', rewardResponseData);
 
                     if (rewardResponse.ok) {
+                      setModalVisible(false);
+                      setModalReceipt2(true);
                  
-                       
-                        setModalVisible(false);
-                        setModalReceipt(true);
+                      
 
                         
                         
@@ -274,6 +278,30 @@ const RewardPage = () => {
                 <Text style={styles.receiptText}>You've successfully bought <Text style={{fontWeight: '500'}}>{selectedReward.RewardName}</Text> for <Text style={{fontWeight: '500'}}>{selectedReward.Price}</Text> SmartPoints.</Text>
                 <Text style={styles.receiptThanks}>Claim it in HSO Office!</Text>
                 <TouchableOpacity style={styles.buyMButton} onPress={() => setModalReceipt(false)}>
+                  <Text style={styles.buyMText}>OK</Text>
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+      animationType="fade"
+        transparent={true}
+        visible={modalReceipt}
+        onRequestClose={() => setModalReceipt2(!modalReceipt2)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalViewReceipt}>
+            <Image source={Check} style={styles.check}></Image>
+            <Text style={styles.receiptTitle}>Purchase Successful!</Text>
+            {selectedReward && (
+              <>
+                
+                <Text style={styles.receiptText}>You've successfully bought <Text style={{fontWeight: '500'}}>{selectedReward.RewardName}</Text> for <Text style={{fontWeight: '500'}}>{selectedReward.Price}</Text> SmartPoints.</Text>
+                <Text style={styles.receiptThanks}>Claim it in HSO Office!</Text>
+                <TouchableOpacity style={styles.buyMButton} onPress={() => setModalReceipt2(false)}>
                   <Text style={styles.buyMText}>OK</Text>
                 </TouchableOpacity>
               </>

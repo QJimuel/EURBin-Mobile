@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView , Image} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView , Image, Modal, ScrollView} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 import Logo from '../icons/Eurbin.png'
@@ -22,6 +22,8 @@ const SignUp = ({ navigation }) => {
   const [program, setProgram] = useState(null);
   const [programOpen, setProgramOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+
 
 
  const [inputErrors, setInputErrors] = useState({
@@ -33,6 +35,7 @@ const SignUp = ({ navigation }) => {
   department: false,
   yearLevel: false,
   program: false,
+  checkbox: false
 });
 
   const handleCheckboxChange = () => {
@@ -72,7 +75,7 @@ const SignUp = ({ navigation }) => {
     { label: '2nd Year', value: '2nd Year' },
     { label: '3rd Year', value: '3rd Year' },
     { label: '4th Year', value: '4th Year' },
-    { label: '5th Year', value: '5th Year' },
+    ...(department === 'CENG' || department === 'CAFA' ? [{ label: '5th Year', value: '5th Year' }] : []),
   ];
 
  
@@ -131,6 +134,7 @@ const handleSubmit = async () => {
     department: false,
     yearLevel: false,
     program: false,
+    checkbox: false,
   });
   setErrorMessage('');
 
@@ -201,6 +205,11 @@ const handleSubmit = async () => {
     return;
   }
 
+  if (!isChecked) {
+    setErrorMessage('You must accept the Terms and Conditions to proceed.');
+    return;
+  }
+
 
   if (hasError) return; 
 
@@ -241,6 +250,10 @@ const handleSubmit = async () => {
     } catch (error) {
         setErrorMessage('Failed to create account: ' + error.message);
     }
+};
+
+const onTermsPress = () => {
+  setModalVisible(true); 
 };
 
 return (
@@ -284,9 +297,12 @@ return (
             items={departmentOptions}
             setOpen={setDepartmentOpen}
             setValue={handleDepartmentChange}
+            searchable={true}  // Make dropdown searchable
+            searchPlaceholder="Type a department..."
             placeholder="Department"
             style={[ styles.dropdown2, inputErrors.department && styles.inputError ]}
             dropDownContainerStyle={styles.dropdownContainer}
+            
           />
     </View>
 
@@ -367,8 +383,19 @@ return (
         onChangeText={setConfirmPassword}
       />
 </View>
-
-
+<View style={styles.termsRow}>
+<View style={styles.checkboxContainer}>
+        <TouchableOpacity style={styles.checkbox} onPress={handleCheckboxChange}>
+          <View style={[styles.checkboxBox, isChecked && styles.checkboxChecked]} />
+        </TouchableOpacity>
+        <Text style={styles.checkboxText}>
+          I accept the {' '}
+          <Text style={styles.link} onPress={() => onTermsPress()}>
+            Terms and Conditions
+          </Text>
+        </Text>
+      </View>
+</View>
 
 <View style={styles.caButton}>
 {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
@@ -383,6 +410,80 @@ return (
         <Text onPress={() => navigation.navigate('Login')} style={styles.loginLink}> Log in</Text>
       </Text>
       </View>
+
+      <Modal
+        animationType="none"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalView}>
+            <>
+              <Text style={styles.modalText}>Terms & Conditions</Text>
+              <ScrollView contentContainerStyle={styles.modalContentContainer}>
+                <Text style={styles.content}><Text style={styles.subTitle}>1. Acceptance of Terms</Text> By using the Eurbin app, you agree to comply with and be bound by these Terms and Conditions. If you do not agree, please do not use the app. </Text>
+
+                <Text style={styles.content}><Text style={styles.subTitle}>2. User Account</Text> To access certain features of Eurbin, you may be required to register for an account. You agree to provide accurate, complete, and current information, keep your password secure, and promptly update any changes to your account information. </Text>
+
+                <Text style={styles.content}><Text style={styles.subTitle}>3. Use of the App</Text> You may only use Eurbin for personal, non-commercial purposes. You agree not to misuse the app in any way, including but not limited to: </Text>
+
+                <View style={styles.bulletContainer}>
+                  <Text style={styles.bullet}>{"\u2022"}</Text>
+                  <Text style={styles.bulletText}>Violating any laws or regulations.</Text>
+                </View>
+                <View style={styles.bulletContainer}>
+                  <Text style={styles.bullet}>{"\u2022"}</Text>
+                  <Text style={styles.bulletText}>Accessing unauthorized data or accounts.</Text>
+                </View>
+                <View style={styles.bulletContainer}>
+                  <Text style={styles.bullet}>{"\u2022"}</Text>
+                  <Text style={styles.bulletText}>Attempting to disrupt or damage the app’s functionality.</Text>
+                </View>
+                <View style={styles.bulletContainer}>
+                  <Text style={styles.bullet}>{"\u2022"}</Text>
+                  <Text style={styles.bulletText}>Uploading viruses, spam, or malicious code.</Text>
+                </View>
+                <Text style={styles.content}><Text style={styles.subTitle}>4. Privacy</Text> Eurbin is committed to protecting your privacy. Please refer to our Privacy Policy to understand how we collect, use, and safeguard your information. </Text>
+
+                <Text style={styles.content}><Text style={styles.subTitle}>5. Rewards and Transactions </Text>Eurbin provides opportunities to earn rewards based on activities within the app.
+                Rewards may be subject to availability, expiration, and verification of eligibility.
+                Eurbin reserves the right to modify or cancel rewards at any time.</Text>
+
+                <Text style={styles.content}><Text style={styles.subTitle}>6. Termination of Account </Text>We reserve the right to suspend or terminate your account without notice if we believe you have violated these terms or engaged in unlawful or inappropriate behavior.</Text>
+
+                <Text style={styles.content}><Text style={styles.subTitle}>7. Disclaimer of Warranties </Text>Eurbin is provided “as is” without any warranties, express or implied. We do not guarantee that the app will be error-free or that the services will be uninterrupted.</Text>
+
+                <Text style={styles.content}><Text style={styles.subTitle}>8. Limitation of Liability </Text>In no event shall Eurbin or its affiliates be liable for any direct, indirect, incidental, special, or consequential damages arising from your use of the app or inability to use the app.</Text>
+                
+                <Text style={styles.content}><Text style={styles.subTitle}>9. Contact Information </Text>If you have any questions about these Terms and Conditions, please contact our support team.</Text>
+              </ScrollView>
+                
+                <View style={styles.modalButtons}>
+                  <TouchableOpacity
+                    style={styles.cancelMButton}
+                    onPress={() => setModalVisible(false)}
+                  >
+                  <Text style={styles.cancelMText}>Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.acceptMButton}
+                    onPress={() => {
+                      setIsChecked(true); 
+                      setModalVisible(false); 
+                    }}
+                  >
+                    <Text style={styles.acceptMText}>Accept</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+          </View>
+        </View>
+      </Modal>
+
+
     </KeyboardAvoidingView>
 
   );
@@ -398,17 +499,13 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start', 
     top: -100,
     left: -100,
-   
   },
   image: {
     width: 150,
     height: 150,
     marginTop: 50,
     marginLeft: 100,
-    
-    
     tintColor: '#fff'
-    
   },
   container: {
     flex: 1,
@@ -440,8 +537,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     position: 'relative', 
     zIndex: 1,
-  
-   
   },
   input2: {
     height: 50,
@@ -455,7 +550,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     position: 'relative', 
     zIndex: 1, 
-
   },
   dropdown: {
     height: 40,
@@ -538,12 +632,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff', 
     borderColor: '#d3d3d3',
   },
-  checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 25,
-    alignSelf: 'flex-start',
-  },
   label: {
     marginLeft: 5,
     color: '#333',
@@ -556,7 +644,117 @@ const styles = StyleSheet.create({
     borderColor: 'red',
     borderWidth: 1,
   },
-
+  checkboxContainer: {
+    flexDirection: 'row',
+    marginBottom: 20,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    marginRight: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkboxBox: {
+    width: 14,
+    height: 14,
+    backgroundColor: 'transparent',
+  },
+  checkboxChecked: {
+    backgroundColor: '#800000',
+  },
+  checkboxText: {
+    fontSize: 14,
+    color: '#333',
+  },
+  termsRow: {
+    width: '100%',
+    marginLeft: 10,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dimmed background
+  },
+  modalView: {
+    width: 300,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+    maxHeight: '80%',
+  },
+  modalText: {
+    fontSize: 20,
+    marginBottom: 10,
+    color: '#333',
+    fontWeight: 'bold'
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    marginTop: 20,
+  },
+  acceptMButton: {
+    backgroundColor: '#5e0005',
+    borderRadius: 10,
+    height: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 70,
+  },
+  acceptMText: {
+    color: 'white',
+  },
+  cancelMButton: {
+    backgroundColor: 'white',
+    borderColor: '#5e0005',
+    borderWidth: 1,
+    borderRadius: 10,
+    height: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 70,
+    marginRight: 20,
+  },
+  cancelMText: {
+    color: '#5e0005',
+  },
+  modalContentContainer: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  subTitle: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginVertical: 8,
+  },
+  bulletContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start', 
+    marginLeft: 20, 
+    marginVertical: 4, 
+  },
+  bullet: {
+    fontSize: 14,
+    lineHeight: 20,
+    marginRight: 8, 
+  },
+  bulletText: {
+    fontSize: 14,
+    flexShrink: 1, 
+  },
+  content: {
+    marginBottom: 10,
+  },
 
 });
 

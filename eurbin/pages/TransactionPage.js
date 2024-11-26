@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, Image } from 'react-native';
 import { useUser } from './UserContext/User';
+import DropDownPicker from 'react-native-dropdown-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Receipt from '../icons/receipt.jpg';
+import Inc from '../icons/inc.png';
+import Desc from '../icons/desc.png';
 
 const TransactionPage = () => {
   const [transactions, setTransactions] = useState([]);
   const { currentUser } = useUser(); 
   const [selectedTransaction, setSelectedTransaction] = useState(null); 
   const [modalVisible, setModalVisible] = useState(false); 
+  const [sortOrder, setSortOrder] = useState('desc'); // Default sorting order
+  const [open, setOpen] = useState(false); // State to control dropdown open/close
+
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
@@ -54,14 +60,25 @@ const TransactionPage = () => {
     });
   };
 
+  // Filter and sort transactions
+  const userTransactions = transactions
+    .filter((transaction) => transaction.userId.toString() === currentUser.userId.toString())
+    .sort((a, b) => {
+      if (sortOrder === 'desc') {
+        return new Date(b.date) - new Date(a.date);
+      } else {
+        return new Date(a.date) - new Date(b.date);
+      }
+    });
+
   const onTransactionPress = (item) => {
     setSelectedTransaction(item);
     setModalVisible(true); 
   };
 
-  const userTransactions = transactions.filter(
-    transaction => transaction.userId.toString() === currentUser.userId.toString()
-);
+//   const userTransactions = transactions.filter(
+//     transaction => transaction.userId.toString() === currentUser.userId.toString()
+// );
 
 
  
@@ -92,7 +109,28 @@ const TransactionPage = () => {
   return (
     <View style={styles.container}>
       <View style={styles.customBox}></View>
+      <View style={styles.titleRow}>
       <Text style={styles.transactionText}>Transaction</Text>
+         <Image
+            source={sortOrder === 'desc' ? Desc : Inc}
+            style={styles.sortImage}
+          /> 
+        
+        <View style={styles.sortPickerContainer}>
+          <DropDownPicker
+            open={open}  
+            value={sortOrder}
+            items={[
+              { label: 'Newest', value: 'desc' },
+              { label: 'Oldest', value: 'asc' }
+            ]}
+            setOpen={setOpen} 
+            setValue={setSortOrder}
+            style={styles.dropdown} 
+          />
+        </View>
+        </View>
+
       <FlatList
         data={userTransactions}
         renderItem={renderItem}
@@ -183,7 +221,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-
     justifyContent: 'flex-start',
     textAlign: 'flex-start'
   },
@@ -234,7 +271,8 @@ const styles = StyleSheet.create({
   transactionText:{
     fontSize: 30,
     fontWeight: 'bold',
-    padding: 20
+    padding: 20,
+    paddingLeft: 0,
   },
   modalOverlay: {
     flex: 1,
@@ -283,5 +321,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#555',
     textAlign: 'right', 
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between', 
+    alignItems: 'center',          
+    paddingHorizontal: 20, 
+  },
+  sortImage: {
+    height: 25,
+    width: 25,
+  },
+  dropdown: {
+    backgroundColor: '#fafafa',
+    width: 110,
+  },
+  sortPickerContainer: {
+    alignSelf: 'center',
   },
 });

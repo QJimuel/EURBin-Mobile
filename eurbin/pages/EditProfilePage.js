@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Alert, Modal } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useUser } from './UserContext/User';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,6 +10,7 @@ export default function EditProfilePage() {
     const [email, setEmail] = useState(currentUser.email);
     const [errorMessage, setErrorMessage] = useState('');
     const [image, setImage] = useState(null);
+    const [modalEditProf, setModalEditProf] = useState(false);
 
     
     const updateProfileUrl = `https://eurbin.vercel.app/user/${currentUser.userId}`;
@@ -126,10 +127,40 @@ export default function EditProfilePage() {
 
               
 
-                <TouchableOpacity style={styles.saveButton} onPress={handleUpdate}>
+                <TouchableOpacity style={styles.saveButton} onPress={() => setModalEditProf(true)}>
                     <Text style={styles.buttonText}>Save and Update</Text>
                 </TouchableOpacity>
             </View>
+            {/* Confirmation Modal for Edit Profile */}
+            <Modal
+                transparent={true}
+                animationType="fade"
+                visible={modalEditProf}
+                onRequestClose={() => setModalEditProf(false)} // Handle back button close
+            >
+                <View style={styles.modalLOBackground}>
+                    <View style={styles.modalLOContainer}>
+                        <Text style={styles.modalLOText}>Are you sure you want to edit your Profile?</Text>
+                        
+                        {/* Modal Buttons */}
+                        <View style={styles.modalLOButtons}>
+                            <TouchableOpacity 
+                                style={styles.cancelButton} 
+                                onPress={() => setModalEditProf(false)}
+                            >
+                                <Text style={styles.cancelButtonText}>Cancel</Text>
+                            </TouchableOpacity>
+                            
+                            <TouchableOpacity 
+                                style={styles.logoutButton} 
+                                onPress={handleUpdate}
+                            >
+                                <Text style={styles.logoutButtonText}>Save</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 }
@@ -232,5 +263,73 @@ const styles = StyleSheet.create({
     errorText: {
         color: 'red',
         marginBottom: 15,
+    },
+    modalBackground: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // dim background
+    },
+    modalContainer: {
+        width: 300,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        padding: 20,
+        alignItems: 'center',
+    },
+    modalLOBackground: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalLOContainer: {
+        width: 300,
+        height: 190,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    modalLOText: {
+        fontSize: 18,
+        marginBottom: 10,
+        color: '#333',
+        textAlign: 'center',
+    },
+    modalLOButtons: {
+        flexDirection: 'row',
+        marginTop: 20,
+    },
+    cancelButton: {
+        backgroundColor: 'white',
+        borderColor: '#5e0005',
+        borderWidth: 1,
+        borderRadius: 20,
+        height: 35,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 70,
+        marginRight: 20,
+    },
+    cancelButtonText: {
+        color: '#5e0005',
+    },
+    logoutButton: {
+        backgroundColor: '#5e0005',
+        borderRadius: 20,
+        height: 35,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 70,
+    },
+    logoutButtonText: {
+        color: 'white',
     },
 });

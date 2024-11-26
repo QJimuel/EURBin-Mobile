@@ -104,7 +104,7 @@ const HomePage = ({ navigation }) => {
         setCurrentUser((prevUser) => {
            
             const updatedSmartPoints = prevUser.smartPoints + responseData.code.smartPoints;
-            const updatedPlasticBottle = prevUser.plasticBottle + 50;
+            const updatedPlasticBottle = prevUser.plasticBottle + 1;
             const updatedAccumulatedSP = prevUser.accumulatedSP + responseData.code.smartPoints;
             const updatedCO2 = prevUser.co2 + (1 * 0.12);
             let updatedRank = ""
@@ -113,7 +113,7 @@ const HomePage = ({ navigation }) => {
 
             if(updatedPlasticBottle < 50){
               updatedRank = "null"
-            }
+            } 
 
             if(updatedPlasticBottle >= 50){
               updatedRank = "Emerald"
@@ -130,6 +130,7 @@ const HomePage = ({ navigation }) => {
             if(updatedPlasticBottle >= 1000){
               updatedRank = "Emerald"
             }
+
 
 
             

@@ -12,6 +12,13 @@ export default function SettingsPage({ navigation }) {
     const [isModalVisible, setModalVisible] = useState(false);
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
+    const [modalLogout, setModalLogout] = useState(false);
+    const [modalChangePass, setModalChangePass] = useState(false);
+
+    const handleLogout = () => {
+        setModalLogout(false);
+        navigation.navigate('Login'); 
+      };
 
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
@@ -105,7 +112,7 @@ export default function SettingsPage({ navigation }) {
                         <Image source={Arrow} style={styles.arrowIcon} />
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('Login')}>
+                    <TouchableOpacity style={styles.option} onPress={() => setModalLogout(true)}>
                         <Text style={styles.optionText}>Logout</Text>
                         <Image source={Arrow} style={styles.arrowIcon} />
                     </TouchableOpacity>
@@ -150,9 +157,71 @@ export default function SettingsPage({ navigation }) {
                             onChangeText={setNewPassword}
                         />
                         
-                        <TouchableOpacity style={styles.changePasswordButton} onPress={handleUpdatePassword}>
+                        <TouchableOpacity style={styles.changePasswordButton} onPress={() => setModalChangePass(true)}>
                             <Text style={styles.buttonText}>Change Password</Text>
                         </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
+            {/* Confirmation Modal for LogOut */}
+            <Modal
+                transparent={true}
+                animationType="fade"
+                visible={modalLogout}
+                onRequestClose={() => setModalLogout(false)} // Handle back button close
+            >
+                <View style={styles.modalLOBackground}>
+                    <View style={styles.modalLOContainer}>
+                        <Text style={styles.modalLOText}>Are you sure you want to logout?</Text>
+                        
+                        {/* Modal Buttons */}
+                        <View style={styles.modalLOButtons}>
+                            <TouchableOpacity 
+                                style={styles.cancelButton} 
+                                onPress={() => setModalLogout(false)}
+                            >
+                                <Text style={styles.cancelButtonText}>Cancel</Text>
+                            </TouchableOpacity>
+                            
+                            <TouchableOpacity 
+                                style={styles.logoutButton} 
+                                onPress={handleLogout}
+                            >
+                                <Text style={styles.logoutButtonText}>Logout</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
+            {/* Confirmation Modal for Change Password */}
+            <Modal
+                transparent={true}
+                animationType="fade"
+                visible={modalChangePass}
+                onRequestClose={() => setModalChangePass(false)} // Handle back button close
+            >
+                <View style={styles.modalLOBackground}>
+                    <View style={styles.modalLOContainer}>
+                        <Text style={styles.modalLOText}>Are you sure you want to change your password?</Text>
+                        
+                        {/* Modal Buttons */}
+                        <View style={styles.modalLOButtons}>
+                            <TouchableOpacity 
+                                style={styles.cancelButton} 
+                                onPress={() => setModalChangePass(false)}
+                            >
+                                <Text style={styles.cancelButtonText}>Cancel</Text>
+                            </TouchableOpacity>
+                            
+                            <TouchableOpacity 
+                                style={styles.logoutButton} 
+                                onPress={handleUpdatePassword}
+                            >
+                                <Text style={styles.logoutButtonText}>Save</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             </Modal>
@@ -307,5 +376,60 @@ const styles = StyleSheet.create({
         color: '#2B0100',
         maxWidth: '90%',
         //textAlign: 'center'
+    },
+    modalLOBackground: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalLOContainer: {
+        width: 300,
+        height: 190,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    modalLOText: {
+        fontSize: 18,
+        marginBottom: 10,
+        color: '#333',
+        textAlign: 'center',
+    },
+    modalLOButtons: {
+        flexDirection: 'row',
+        marginTop: 20,
+    },
+    cancelButton: {
+        backgroundColor: 'white',
+        borderColor: '#5e0005',
+        borderWidth: 1,
+        borderRadius: 20,
+        height: 35,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 70,
+        marginRight: 20,
+    },
+    cancelButtonText: {
+        color: '#5e0005',
+    },
+    logoutButton: {
+        backgroundColor: '#5e0005',
+        borderRadius: 20,
+        height: 35,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 70,
+    },
+    logoutButtonText: {
+        color: 'white',
     },
 });

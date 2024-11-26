@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ActivityIndicator, KeyboardAvoidingView } from 'react-native';
 import Logo from '../icons/Eurbin.png';
 
 import * as Font from 'expo-font';
@@ -74,10 +74,8 @@ const OTPVerification = ({ route, navigation }) => {
     return <ActivityIndicator color="yellow" />;
   }
     return (
-        <View style={styles.container}>
-            <TouchableOpacity onPress={verifyOTP} style={styles.button}>
-                <Text style={styles.buttonText}><Text style={styles.boldText}>Verify</Text></Text>
-            </TouchableOpacity>
+        <KeyboardAvoidingView behavior="padding" style={styles.container}>
+           
              
             <Image source={Logo} style={styles.image} resizeMode="contain" />
         
@@ -97,6 +95,10 @@ const OTPVerification = ({ route, navigation }) => {
                     />
                 ))}
             </View>
+
+            <TouchableOpacity onPress={verifyOTP} style={styles.button}>
+                <Text style={styles.buttonText}><Text style={styles.boldText}>Verify</Text></Text>
+            </TouchableOpacity>
             
             {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
             <Text style={styles.loginPrompt}>
@@ -104,7 +106,7 @@ const OTPVerification = ({ route, navigation }) => {
             <Text onPress={() => navigation.navigate('')} style={styles.loginLink}> Resend</Text>
             </Text>
           
-        </View>
+        </KeyboardAvoidingView>
     );
 };
 
