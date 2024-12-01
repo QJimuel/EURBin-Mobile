@@ -13,7 +13,7 @@ export default function AchievementPage() {
       <View style={styles.customBox}></View>
 
       <View style={styles.whiteContainer}>
-        <Text style={styles.rText}>Rank: {currentUser.rank}</Text>
+        <Text style={styles.rText}>Rank</Text>
       </View>
 
       <ScrollView>

@@ -182,30 +182,39 @@ const RewardPage = () => {
   };
 
   const renderReward = ({ item }) => {
-    const isDisabled = currentUser.smartPoints < item.Price;
+    const isDisabled = currentUser.smartPoints < item.Price || item.Quantity === 0;
   
     return (
-      <View style={[styles.rewardContainer, isDisabled && {borderColor: 'lightgray', borderWidth: 1}]}>
+      <View style={[styles.rewardContainer, isDisabled && { borderColor: 'lightgray', borderWidth: 1 }]}>
         <Image
           source={{ uri: item.Image }}
           style={[styles.rewardImage, isDisabled && { opacity: 0.3 }]}
         />
-        <Text style={[styles.rewardText, isDisabled && {color: 'lightgray'}]}>
+        <Text style={[styles.rewardText, isDisabled && { color: 'lightgray' }]}>
           {item.RewardName}
         </Text>
-        <Text style={[styles.rewardPrice, isDisabled && {color: 'lightgray'}]}>
+        <Text style={[styles.rewardPrice, isDisabled && { color: 'lightgray' }]}>
           Price: {item.Price} SmartPoints
         </Text>
+        {item.Quantity == 0 ? (
+          <Text style={styles.outOfStockText}>Out of Stock</Text>
+        ) : (
+          <Text style={[styles.rewardPrice,  isDisabled && { color: 'lightgray' }]}>Quantity: {item.Quantity}</Text>
+        )}
         <TouchableOpacity
-          style={[styles.buyButton, isDisabled && {borderColor: 'lightgray', borderWidth: 1, backgroundColor: '#fff'}]}
+          style={[
+            styles.buyButton,
+            isDisabled && { borderColor: 'lightgray', borderWidth: 1, backgroundColor: '#fff' },
+          ]}
           onPress={() => !isDisabled && openModal(item)}
           disabled={isDisabled}
         >
-          <Text style={[styles.buyText, isDisabled && {color: 'lightgray'}]}>Buy</Text>
+          <Text style={[styles.buyText, isDisabled && { color: 'lightgray' }]}>Buy</Text>
         </TouchableOpacity>
       </View>
     );
   };
+  
 
   return (
     <View style={styles.container}>
@@ -361,7 +370,7 @@ const styles = StyleSheet.create({
   },
   rewardContainer: {
     width: (screenWidth / 2) - 24,  
-    height: 240,
+    height: 250,
     padding: 15,
     backgroundColor: '#fff',
     borderColor: '#2b0100',
@@ -517,4 +526,19 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#2b0100',
   },
+  outOfStockText: {
+    color: 'red',
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginTop: 2,
+    textAlign: 'center',
+  },
+  quantityText: {
+    color: 'green',
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginTop: 5,
+    textAlign: 'center',
+  },
+  
 });

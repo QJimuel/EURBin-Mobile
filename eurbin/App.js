@@ -24,6 +24,7 @@ import RecyclePage from './pages/RecyclePage';
 import OTPVerification from './pages/OtpPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import Logo from './icons/Eurbin.png';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 
 
 import { UserProvider } from './pages/UserContext/User'; 
@@ -96,6 +97,7 @@ export default function App() {
         <Stack.Screen name="Recycle" component={RecyclePage} />
         <Stack.Screen name="Otp" component={OTPVerification}options={{headerShown: false}} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordPage} />
+        <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
       
       </Stack.Navigator>
  

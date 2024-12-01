@@ -58,6 +58,7 @@ export default function SettingsPage({ navigation }) {
             if (response.status === 200) {
                 Alert.alert('Success', 'Password updated successfully');
                 toggleModal(); // Close modal after successful password change
+                setModalChangePass(false)
             } else {
                 Alert.alert('Error', data.message || 'Failed to update password');
             }
@@ -121,7 +122,7 @@ export default function SettingsPage({ navigation }) {
 
                     <Text style={styles.sectionHeader}>More</Text>
 
-                    <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('Privacy Policy')}>
+                    <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('PrivacyPolicy')}>
                         <Text style={styles.optionText}>Privacy Policy</Text>
                         <Image source={Arrow} style={styles.arrowIcon} />
                     </TouchableOpacity>

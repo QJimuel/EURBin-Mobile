@@ -81,6 +81,7 @@ export default function EditProfilePage() {
                 const data = await response.json();
                 setCurrentUser({ ...currentUser, userName: username, email });
                 Alert.alert('Success', 'Profile updated successfully');
+                setModalEditProf(false)
             } else {
                 const errorData = await response.json();
                 setErrorMessage(errorData.message || 'Failed to update profile');

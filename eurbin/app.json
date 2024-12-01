@@ -13,14 +13,14 @@
       "backgroundColor": "#800000"
     },
     "ios": {
-      
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/newLogo.png",
         "backgroundColor": "#800000"
-      }
+      },
+      "package": "com.jquerel.eurbin"
     },
     "web": {
       "favicon": "./assets/favicon.png"
