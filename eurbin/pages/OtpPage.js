@@ -101,10 +101,7 @@ const OTPVerification = ({ route, navigation }) => {
             </TouchableOpacity>
             
             {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
-            <Text style={styles.loginPrompt}>
-                Didn't receive the code?
-            <Text onPress={() => navigation.navigate('')} style={styles.loginLink}> Resend</Text>
-            </Text>
+          
           
         </KeyboardAvoidingView>
     );

@@ -88,7 +88,7 @@ export default function AboutPage() {
       <View style={styles.section}>
         <Text style={styles.subHeader}>Contact Us</Text>
         <Text style={styles.paragraph}>
-          For more information or support, please contact us at: <Text style={styles.link}>support@eurbin.com</Text>
+          For more information or support, please contact us at: <Text style={styles.link}>eurbinmmq@gmail.com</Text>
         </Text>
       </View>
 
